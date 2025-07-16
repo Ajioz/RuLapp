@@ -1,23 +1,18 @@
-import Philosophy from "@/components/Home/Philosophy";
-import HomeComponent from "@/components/Home";
-import Blog from "@/components/Home/Blog";
-import FundRaising from "@/components/Home/Fundraising";
-import Report from "@/components/Home/Report";
-import RollOver from "@/components/Home/Rollover";
-import Layout from "@/components/Layout";
+import Layout from "../components/Layout";
+import { Container, Title } from "../components/StyledComponents";
 
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
-      <Layout title={"Home"}>
-        <HomeComponent />
-        <RollOver />
-        <Philosophy />
-        <FundRaising />
-        <Report />
-        <Blog />
-      </Layout>
-    </>
+    <Layout>
+      <Container>
+        <Title>🚀 Welcome to the RUL Prediction Interface</Title>
+        <p>This tool allows you to:</p>
+        <ul>
+          <li>📤 Upload new engine sensor data and train models</li>
+          <li>🔍 Run batch predictions using trained models</li>
+          <li>📊 Understand Remaining Useful Life (RUL) predictions</li>
+        </ul>
+      </Container>
+    </Layout>
   );
 }

@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+import Layout from "../components/Layout";
+import {
+  Container,
+  Title,
+  Button,
+  Output,
+} from "../components/StyledComponents";
+import { predictSingle } from "../components/ApiService";
+import { toast } from "react-toastify";
+
+export default function SinglePredictionPage() {
+  const [features, setFeatures] = useState({
+    op_setting_1: 35.5,
+    op_setting_2: 0.8,
+    op_setting_3: 100.0,
+    sensor_2: 520.1,
+    sensor_3: 638.2,
+    sensor_4: 1587.5,
+  });
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFeatures({ ...features, [e.target.name]: parseFloat(e.target.value) });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const response = await predictSingle(features);
+      setResult(JSON.stringify(response.data, null, 2));
+      toast.success("✅ Prediction successful");
+    } catch (error) {
+      setResult(error?.response?.data?.detail || "Prediction failed");
+      toast.error("❌ Prediction failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Layout>
+      <Container>
+        <Title>📈 Single RUL Prediction</Title>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          {Object.keys(features).map((key) => (
+            <div key={key} style={{ marginBottom: "1rem" }}>
+              <label>{key}: </label>
+              <input
+                type="number"
+                name={key}
+                value={features[key]}
+                onChange={handleChange}
+                step="0.01"
+              />
+            </div>
+          ))}
+          <Button type="submit" disabled={loading}>
+            {loading ? "Predicting..." : "Predict"}
+          </Button>
+        </form>
+        {result && <Output>{result}</Output>}
+      </Container>
+    </Layout>
+  );
+}

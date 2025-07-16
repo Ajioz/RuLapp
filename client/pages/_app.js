@@ -1,22 +1,17 @@
-import "@/styles/globals.css";
-import { useEffect, useState } from "react";
-import Preloader from "@/components/Preloader";
+import { GlobalStyle } from "../components/StyledComponents";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App({ Component, pageProps }) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000); // 1 second delay
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <Preloader />;
-  }
-
   return (
     <>
-      <Component {...pageProps} />;
+      <GlobalStyle />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+      />
+      <Component {...pageProps} />
     </>
   );
 }
