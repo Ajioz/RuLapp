@@ -39,6 +39,22 @@ export default function SinglePredictionPage() {
     }
   };
 
+  const handleDownload = () => {
+    if (!result) return;
+    const csv = `feature,value\n${Object.entries(features)
+      .map(([k, v]) => `${k},${v}`)
+      .join("\n")}
+\n${result}`;
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "single_rul_prediction.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Layout>
       <Container>
@@ -64,6 +80,15 @@ export default function SinglePredictionPage() {
           <Button type="submit" disabled={loading}>
             {loading ? "Predicting..." : "Predict"}
           </Button>
+          {result && (
+            <Button
+              type="button"
+              style={{ marginLeft: "1rem" }}
+              onClick={handleDownload}
+            >
+              ⬇️ Download CSV
+            </Button>
+          )}
         </form>
         {result && <Output>{result}</Output>}
       </Container>
