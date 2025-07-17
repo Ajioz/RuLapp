@@ -18,6 +18,9 @@ export default function SinglePredictionPage() {
     sensor_3: 638.2,
     sensor_4: 1587.5,
   });
+
+  const [engineType, setEngineType] = useState("FD002");
+  const [condition, setCondition] = useState("standard");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +31,13 @@ export default function SinglePredictionPage() {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const response = await predictSingle(features);
+      const payload = {
+        engine_type: engineType,
+        condition,
+        row_index: 0,
+        data: features,
+      };
+      const response = await predictSingle(payload);
       setResult(JSON.stringify(response.data, null, 2));
       toast.success("✅ Prediction successful");
     } catch (error) {
@@ -65,6 +74,22 @@ export default function SinglePredictionPage() {
             handleSubmit();
           }}
         >
+          <div style={{ marginBottom: "1rem" }}>
+            <label>Engine Type: </label>
+            <input
+              type="text"
+              value={engineType}
+              onChange={(e) => setEngineType(e.target.value)}
+            />
+          </div>
+          <div style={{ marginBottom: "1rem" }}>
+            <label>Condition: </label>
+            <input
+              type="text"
+              value={condition}
+              onChange={(e) => setCondition(e.target.value)}
+            />
+          </div>
           {Object.keys(features).map((key) => (
             <div key={key} style={{ marginBottom: "1rem" }}>
               <label>{key}: </label>

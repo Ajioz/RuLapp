@@ -1,46 +1,51 @@
-// import axios from "axios";
+const API_BASE = "http://localhost:8000"; // Update if hosted elsewhere
 
-// const BASE_URL =
-//   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+export async function predictFromForm(
+  data,
+  engineType = "FD002",
+  condition = "standard",
+  rowIndex = 0
+) {
+  const payload = {
+    engine_type: engineType,
+    condition: condition,
+    row_index: rowIndex,
+    data: data,
+  };
 
-// export const uploadTrainingFile = (file) => {
-//   const formData = new FormData();
-//   formData.append("file", file);
-//   return axios.post(`${BASE_URL}/upload`, formData);
-// };
+  const response = await fetch(`${API_BASE}/predict`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 
-// export const predictBatch = (payload) => {
-//   return axios.post(`${BASE_URL}/predict/batch`, payload);
-// };
+  if (!response.ok) {
+    throw new Error("Failed to fetch prediction");
+  }
 
+  return await response.json();
+}
 
-import axios from 'axios';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
-
-export const uploadTrainingFile = (file) => {
+export async function predictFromFile(
+  file,
+  engineType = "FD002",
+  rowIndex = 0
+) {
   const formData = new FormData();
-  formData.append('file', file);
-  return axios.post(`${BASE_URL}/upload`, formData);
-};
+  formData.append("file", file);
+  formData.append("engine_type", engineType);
+  formData.append("row_index", rowIndex);
 
-export const predictBatch = (payload) => {
-  return axios.post(`${BASE_URL}/predict/batch`, payload);
-};
+  const response = await fetch(`${API_BASE}/predict/batch`, {
+    method: "POST",
+    body: formData,
+  });
 
-export const predictSingle = (features, model = 'xgb') => {
-  return axios.post(`${BASE_URL}/predict`, { features, model });
-};
+  if (!response.ok) {
+    throw new Error("Failed to fetch batch prediction");
+  }
 
-export const downloadPredictionCSV = (data) => {
-  const blob = new Blob([data], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', 'rul_predictions.csv');
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-// Add any additional utilities here as needed
+  return await response.json();
+}
