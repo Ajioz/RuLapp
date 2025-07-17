@@ -54,7 +54,26 @@ class BatchInput(BaseModel):
 
 # ========== 🔧 Helper Functions ==========
 def compute_rul(df):
-    df.columns = ["unit", "time"] + [f"op_setting_{i}" for i in range(1, 4)] + [f"sensor_{i}" for i in range(1, 22)]
+    """
+    Adds column names to the raw data and calculates the
+    Remaining Useful Life (RUL) for each row.
+
+    This version dynamically determines the number of sensor columns,
+    making it flexible for datasets with varying features.
+    """
+    # Standard columns
+    base_columns = ["unit", "time"]
+    num_op_settings = 3
+    # Calculate the number of sensor columns
+    num_sensor_cols = len(df.columns) - len(base_columns) - num_op_settings
+    if num_sensor_cols <= 0:
+        raise ValueError("The input data does not have enough columns for sensors.")
+    # Generate column names dynamically
+    op_setting_cols = [f"op_setting_{i}" for i in range(1, num_op_settings + 1)]
+    sensor_cols = [f"sensor_{i}" for i in range(1, num_sensor_cols + 1)]
+    # Assign the new column names
+    df.columns = base_columns + op_setting_cols + sensor_cols
+    # Calculate Remaining Useful Life (RUL)
     df['RUL'] = df.groupby("unit")["time"].transform("max") - df["time"]
     return df
 

@@ -6,25 +6,25 @@ This project was bootstrapped with Create Next App.
 
 ## Features
 
-- **Home Page**: Welcome page for the application.
-- **Predict Page**:
-  - Make a RUL prediction for a single data instance.
-  - Make RUL predictions for a batch of data instances (in JSON format).
-  - Download batch predictions as a CSV file.
-- **Upload Page**: Upload a training data file (CSV) to the backend.
+-   **Home Page**: Welcome page for the application.
+-   **Predict Page**:
+    -   Make a RUL prediction for a single data instance.
+    -   Make RUL predictions for a batch of data instances (in JSON format).
+    -   Download batch predictions as a CSV file.
+-   **Upload Page**: Upload a training data file (CSV) to the backend.
 
 ## Tech Stack
 
-- Next.js
-- React
-- styled-components
-- axios for API communication
+-   Next.js
+-   React
+-   styled-components
+-   axios for API communication
 
 ## Prerequisites
 
-- Node.js (v18.x or later recommended)
-- npm, yarn, or pnpm
-- A running instance of the RUL Prediction API backend.
+-   Node.js (v18.x or later recommended)
+-   npm, yarn, or pnpm
+-   A running instance of the RUL Prediction API backend.
 
 ## Getting Started
 
@@ -42,4 +42,3 @@ npm install
 yarn install
 # or
 pnpm dev
-```
