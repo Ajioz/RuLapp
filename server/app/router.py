@@ -1,8 +1,7 @@
+import io
+import pandas as pd
 from fastapi import APIRouter, File, UploadFile, Form
 from fastapi.responses import JSONResponse
-import pandas as pd
-import io
-
 from models.pipeline import predict_rul
 from models.utils import prepare_input_data
 from app.schemas import UIInput
@@ -20,6 +19,7 @@ async def api_predict(input: UIInput):
     )
     result = predict_rul(input_row)
     return result
+
 
 
 @router.post("/predict/batch", tags=["Batch File Upload"])
