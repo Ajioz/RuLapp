@@ -2,19 +2,16 @@ import joblib
 import json
 from pathlib import Path
 from datetime import datetime
-
 import mlflow
 import mlflow.sklearn
 import mlflow.xgboost
-
+from mlflow.models.signature import infer_signature
 from mlflow_config import MLFLOW_TRACKING_URI
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import shap
-
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
@@ -43,7 +40,6 @@ def infer_column_schema(df: pd.DataFrame):
 def run_training_pipeline(dataset_id: str):
     print(f"\n🚀 Training pipeline for {dataset_id}")
 
-    # === Load Data ===
     def load_dataset(file_path):
         df = pd.read_csv(file_path, sep=r"\s+", header=None)
         cols, op_cols, sensor_cols = infer_column_schema(df)
@@ -70,19 +66,23 @@ def run_training_pipeline(dataset_id: str):
     features = op_cols + final_sensors
     print(f"✅ Features selected: {len(features)}")
 
-    # Correlation heatmap
+    # === Correlation Heatmap ===
+    Path("reports").mkdir(exist_ok=True)
     plt.figure(figsize=(10, 8))
     sns.heatmap(train_df[final_sensors + ['RUL']].corr(), cmap="coolwarm", annot=False)
     plt.title(f"{dataset_id} Sensor Correlation Heatmap")
     plt.tight_layout()
-    Path("reports").mkdir(exist_ok=True)
     heatmap_path = Path("reports") / f"{dataset_id.lower()}_correlation_heatmap.png"
     plt.savefig(heatmap_path)
     plt.close()
     print(f"🧊 Correlation heatmap saved: {heatmap_path}")
 
+    # === MLflow Setup ===
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(dataset_id)
+
+    mlflow.sklearn.autolog()
+    mlflow.xgboost.autolog()
 
     with mlflow.start_run(run_name=f"{dataset_id}_rul_training"):
         mlflow.log_param("selected_features", features)
@@ -120,13 +120,28 @@ def run_training_pipeline(dataset_id: str):
             for metric, value in eval_result.items():
                 mlflow.log_metric(f"{model_name}_{metric}", value)
 
-        # === Save Models and Features ===
+        # === Save Artifacts Locally ===
+        Path("models").mkdir(exist_ok=True)
+        Path("inference").mkdir(exist_ok=True)
+
         joblib.dump(rf, f"models/{dataset_id.lower()}_rf_model.pkl")
         joblib.dump(xgb, f"models/{dataset_id.lower()}_xgb_model.pkl")
         joblib.dump(features, f"models/{dataset_id.lower()}_feature_columns.pkl")
 
+        # === MLflow Log with Signature ===
+        signature = infer_signature(X_test, xgb_preds)
+
         mlflow.sklearn.log_model(rf, artifact_path="random_forest")
-        mlflow.xgboost.log_model(xgb, artifact_path="xgboost")
+        mlflow.xgboost.log_model(
+            xgb,
+            artifact_path="xgboost",
+            signature=signature,
+            input_example=X_test.head(1)
+        )
+
+        # === Register Models ===
+        mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/random_forest", f"{dataset_id}_RandomForest")
+        mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/xgboost", f"{dataset_id}_XGBoost")
 
         # === Save Predictions ===
         predictions = pd.DataFrame({
@@ -135,9 +150,31 @@ def run_training_pipeline(dataset_id: str):
             "XGB_Predicted_RUL": xgb_preds
         })
         pred_path = Path("inference") / f"{dataset_id.lower()}_predictions.csv"
-        Path("inference").mkdir(exist_ok=True)
         predictions.to_csv(pred_path, index=False)
         mlflow.log_artifact(pred_path.as_posix())
+
+        # === Residual Plot ===
+        residuals = y_test - xgb_preds
+        plt.figure(figsize=(8, 6))
+        sns.histplot(residuals, kde=True)
+        plt.title(f"Residual Distribution - {dataset_id} XGBoost")
+        plt.xlabel("Residuals")
+        res_path = Path("reports") / f"{dataset_id.lower()}_residuals.png"
+        plt.savefig(res_path)
+        plt.close()
+        mlflow.log_artifact(res_path.as_posix())
+
+        # === Prediction vs Actual Plot ===
+        plt.figure(figsize=(8, 6))
+        sns.scatterplot(x=y_test, y=xgb_preds, alpha=0.6)
+        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "--", color="red")
+        plt.xlabel("True RUL")
+        plt.ylabel("Predicted RUL")
+        plt.title(f"XGBoost Prediction vs True - {dataset_id}")
+        pred_vs_path = Path("reports") / f"{dataset_id.lower()}_xgb_scatter.png"
+        plt.savefig(pred_vs_path)
+        plt.close()
+        mlflow.log_artifact(pred_vs_path.as_posix())
 
         # === SHAP Explanation ===
         try:
@@ -145,7 +182,6 @@ def run_training_pipeline(dataset_id: str):
             explainer = shap.Explainer(xgb)
             shap_values = explainer(X_train)
 
-            # Bar Plot
             shap_bar_path = Path("reports") / f"{dataset_id.lower()}_shap_bar.png"
             shap.plots.bar(shap_values, max_display=10, show=False)
             plt.title("Top SHAP Features")
@@ -153,7 +189,6 @@ def run_training_pipeline(dataset_id: str):
             plt.close()
             mlflow.log_artifact(shap_bar_path.as_posix())
             print(f"📈 SHAP bar plot saved: {shap_bar_path.name}")
-
         except Exception as e:
             print(f"⚠️ SHAP generation failed: {e}")
 
