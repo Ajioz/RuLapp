@@ -17,9 +17,10 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.feature_selection import VarianceThreshold
+import warnings
 
+warnings.filterwarnings("ignore")
 sns.set(style='whitegrid')
-
 
 def infer_column_schema(df: pd.DataFrame):
     fixed_cols = ["unit", "time"]
@@ -36,6 +37,29 @@ def infer_column_schema(df: pd.DataFrame):
     sensor_cols = [f"sensor_{i}" for i in range(1, data.shape[1] - op_count + 1)]
     return fixed_cols + op_cols + sensor_cols, op_cols, sensor_cols
 
+def plot_learning_curve(model, X_train, y_train, dataset_id):
+    from sklearn.model_selection import learning_curve
+
+    train_sizes, train_scores, test_scores = learning_curve(
+        model, X_train, y_train, cv=5, scoring='neg_mean_squared_error', n_jobs=-1
+    )
+    train_scores_mean = -np.mean(train_scores, axis=1)
+    test_scores_mean = -np.mean(test_scores, axis=1)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(train_sizes, train_scores_mean, label='Train', marker='o')
+    plt.plot(train_sizes, test_scores_mean, label='CV', marker='x')
+    plt.title(f"Learning Curve - {dataset_id} {model.__class__.__name__}")
+    plt.xlabel("Training Size")
+    plt.ylabel("MSE")
+    plt.legend()
+    plt.grid()
+    lc_path = Path("reports") / f"{dataset_id.lower()}_{model.__class__.__name__.lower()}_learning_curve.png"
+    plt.tight_layout()
+    plt.savefig(lc_path)
+    plt.close()
+    mlflow.log_artifact(lc_path.as_posix())
+    print(f"📊 Learning curve saved: {lc_path.name}")
 
 def run_training_pipeline(dataset_id: str):
     print(f"\n🚀 Training pipeline for {dataset_id}")
@@ -54,7 +78,6 @@ def run_training_pipeline(dataset_id: str):
     train_df["RUL"] = train_df.groupby("unit")["time"].transform("max") - train_df["time"]
     test_df["RUL"] = test_df.groupby("unit")["time"].transform("max") - test_df["time"]
 
-    # === Feature Selection ===
     selector = VarianceThreshold(1e-6)
     selector.fit(train_df[sensor_cols])
     selected_sensors = list(np.array(sensor_cols)[selector.get_support()])
@@ -66,7 +89,6 @@ def run_training_pipeline(dataset_id: str):
     features = op_cols + final_sensors
     print(f"✅ Features selected: {len(features)}")
 
-    # === Correlation Heatmap ===
     Path("reports").mkdir(exist_ok=True)
     plt.figure(figsize=(10, 8))
     sns.heatmap(train_df[final_sensors + ['RUL']].corr(), cmap="coolwarm", annot=False)
@@ -77,17 +99,14 @@ def run_training_pipeline(dataset_id: str):
     plt.close()
     print(f"🧊 Correlation heatmap saved: {heatmap_path}")
 
-    # === MLflow Setup ===
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(dataset_id)
-
     mlflow.sklearn.autolog()
     mlflow.xgboost.autolog()
 
     with mlflow.start_run(run_name=f"{dataset_id}_rul_training"):
         mlflow.log_param("selected_features", features)
 
-        # === Train Models ===
         X = train_df[features]
         y = train_df["RUL"]
         X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -100,7 +119,9 @@ def run_training_pipeline(dataset_id: str):
         xgb.fit(X_train, y_train)
         print("✅ Models trained.")
 
-        # === Evaluate Models ===
+        plot_learning_curve(rf, X_train, y_train, dataset_id)
+        plot_learning_curve(xgb, X_train, y_train, dataset_id)
+
         X_test = test_df[features]
         y_test = test_df["RUL"]
         rf_preds = rf.predict(X_test)
@@ -120,7 +141,6 @@ def run_training_pipeline(dataset_id: str):
             for metric, value in eval_result.items():
                 mlflow.log_metric(f"{model_name}_{metric}", value)
 
-        # === Save Artifacts Locally ===
         Path("models").mkdir(exist_ok=True)
         Path("inference").mkdir(exist_ok=True)
 
@@ -128,7 +148,6 @@ def run_training_pipeline(dataset_id: str):
         joblib.dump(xgb, f"models/{dataset_id.lower()}_xgb_model.pkl")
         joblib.dump(features, f"models/{dataset_id.lower()}_feature_columns.pkl")
 
-        # === MLflow Log with Signature ===
         signature = infer_signature(X_test, xgb_preds)
 
         mlflow.sklearn.log_model(rf, artifact_path="random_forest")
@@ -139,11 +158,9 @@ def run_training_pipeline(dataset_id: str):
             input_example=X_test.head(1)
         )
 
-        # === Register Models ===
         mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/random_forest", f"{dataset_id}_RandomForest")
         mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/xgboost", f"{dataset_id}_XGBoost")
 
-        # === Save Predictions ===
         predictions = pd.DataFrame({
             "True_RUL": y_test,
             "RF_Predicted_RUL": rf_preds,
@@ -153,7 +170,6 @@ def run_training_pipeline(dataset_id: str):
         predictions.to_csv(pred_path, index=False)
         mlflow.log_artifact(pred_path.as_posix())
 
-        # === Residual Plot ===
         residuals = y_test - xgb_preds
         plt.figure(figsize=(8, 6))
         sns.histplot(residuals, kde=True)
@@ -164,7 +180,6 @@ def run_training_pipeline(dataset_id: str):
         plt.close()
         mlflow.log_artifact(res_path.as_posix())
 
-        # === Prediction vs Actual Plot ===
         plt.figure(figsize=(8, 6))
         sns.scatterplot(x=y_test, y=xgb_preds, alpha=0.6)
         plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "--", color="red")
@@ -176,7 +191,6 @@ def run_training_pipeline(dataset_id: str):
         plt.close()
         mlflow.log_artifact(pred_vs_path.as_posix())
 
-        # === SHAP Explanation ===
         try:
             print("🔍 Generating SHAP explanations...")
             explainer = shap.Explainer(xgb)
@@ -200,7 +214,6 @@ def run_training_pipeline(dataset_id: str):
         "xgb_metrics": xgb_eval,
         "features_used": features
     }
-
 
 if __name__ == "__main__":
     for dataset in ["FD001", "FD002", "FD003", "FD004"]:
