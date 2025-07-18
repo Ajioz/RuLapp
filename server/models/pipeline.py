@@ -3,6 +3,7 @@ import pandas as pd
 import shap
 from pathlib import Path
 from models.utils import prepare_input_data
+from models.utils import save_shap_force_plot
 
 
 
@@ -34,6 +35,17 @@ def predict_rul(source, engine_type=None, condition="standard", row_index=0) -> 
         "☠️ CRITICAL" if predicted_rul <= 10 else
         "⚠️ DANGER" if predicted_rul <= 90 else
         "🟢 OK"
+    )
+
+    # Save SHAP plot to file
+    save_shap_force_plot(
+        explanation={
+            "shap_values_array": shap_values.values[0].tolist(),
+            "expected_value": shap_values.base_values[0],
+            "feature_names": feature_cols,
+            "raw_input": input_df.values[0].tolist()
+        },
+        save_path="reports/shap_force_plot.png"
     )
 
     # Step 5: Explain
