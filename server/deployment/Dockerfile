@@ -1,29 +1,44 @@
-# Base image
+# -----------------------------
+# ✅ Base image
+# -----------------------------
 FROM python:3.9-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# -----------------------------
+# ✅ Environment Config
+# -----------------------------
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Set working directory
+# -----------------------------
+# ✅ Working Directory
+# -----------------------------
 WORKDIR /app
 
-# Install system dependencies
+# -----------------------------
+# ✅ Install OS Dependencies
+# -----------------------------
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
+# -----------------------------
+# ✅ Install Python Dependencies
+# -----------------------------
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the app
+# -----------------------------
+# ✅ Copy App Files
+# -----------------------------
 COPY . .
 
-# Set MLflow tracking URI from environment
-ENV MLFLOW_TRACKING_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-
-# Expose port and run FastAPI
+# -----------------------------
+# ✅ Expose API Port
+# -----------------------------
 EXPOSE 8000
+
+# -----------------------------
+# ✅ Entry Command
+# -----------------------------
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

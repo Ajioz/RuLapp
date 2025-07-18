@@ -20,8 +20,9 @@ services:
     depends_on:
       - postgres
     environment:
-      MLFLOW_TRACKING_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
-      MLFLOW_ARTIFACT_URI: file:///mlruns
+      BACKEND_STORE_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
+      ARTIFACT_ROOT: /mlruns
+    command: mlflow server --backend-store-uri=$${BACKEND_STORE_URI} --default-artifact-root=$${ARTIFACT_ROOT} --host 0.0.0.0 --port 5000
     ports:
       - "5000:5000"
     volumes:
@@ -38,7 +39,7 @@ services:
     env_file:
       - ../.env
     environment:
-      MLFLOW_TRACKING_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
+      MLFLOW_TRACKING_URI: http://mlflow:5000
     ports:
       - "8000:8000"
     volumes:
