@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import shap
 import joblib
+import psycopg2
+from psycopg2 import sql
 import json
 
 def detect_input_type(source):
@@ -61,3 +63,22 @@ def prepare_input_data(source, engine_type: str, condition: str = "standard", ro
     input_data["engine_type"] = engine_type
     input_data["condition"] = condition
     return input_data
+
+
+
+def create_mlflow_database(dbname="mlflow_db", user="postgres", password="your_pass", host="localhost", port="5432"):
+    """
+    Creates an MLflow PostgreSQL database if it does not already exist.
+    """
+    try:
+        conn = psycopg2.connect(dbname="postgres", user=user, password=password, host=host, port=port)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(dbname)))
+        print(f"✅ Database '{dbname}' created successfully.")
+        cur.close()
+        conn.close()
+    except psycopg2.errors.DuplicateDatabase:
+        print(f"⚠️ Database '{dbname}' already exists.")
+    except Exception as e:
+        print(f"❌ Error while creating MLflow DB: {e}")

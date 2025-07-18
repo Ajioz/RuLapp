@@ -4,6 +4,7 @@ import uvicorn
 from models.pipeline import predict_rul
 from models.utils import prepare_input_data, detect_input_type, save_shap_force_plot
 from app.router import router
+from models.utils import create_mlflow_database
 
 app = FastAPI(
     title="Engine RUL Prediction API",
@@ -21,6 +22,15 @@ app = FastAPI(
 app.include_router(router)
 
 if __name__ == "__main__":
+    # Create the MLflow DB before serving or CLI
+    create_mlflow_database(
+        dbname="mlflow_db",
+        user="postgres",
+        password="your_pass",  # replace with your actual password
+        host="localhost",
+        port="5432"
+    )
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, help="Input source (file path)", default="data/test_FD002.txt")
     parser.add_argument("--engine_type", type=str, help="Engine type (e.g., FD002)", default="FD002")
