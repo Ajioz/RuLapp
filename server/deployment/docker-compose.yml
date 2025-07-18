@@ -1,16 +1,48 @@
-version: "3.9"
+version: '3.9'
 
 services:
-  rul-api:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: mlflow_db
+      POSTGRES_USER: mlflow_user
+      POSTGRES_PASSWORD: yourpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mlflow:
+    image: mlflow/mlflow
+    container_name: mlflow
+    depends_on:
+      - postgres
+    environment:
+      MLFLOW_TRACKING_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
+      MLFLOW_ARTIFACT_URI: file:///mlruns
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../mlruns:/mlruns
+
+  app:
     build:
       context: ..
       dockerfile: deployment/Dockerfile
-    container_name: rul-inference-api
+    container_name: rul-app
+    depends_on:
+      - postgres
+      - mlflow
+    env_file:
+      - ../.env
+    environment:
+      MLFLOW_TRACKING_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
     ports:
       - "8000:8000"
     volumes:
-      - ..:/app
-    working_dir: /app
-    environment:
-      - PYTHONUNBUFFERED=1
-    restart: unless-stopped
+      - ../mlruns:/app/mlruns
+
+volumes:
+  pgdata:

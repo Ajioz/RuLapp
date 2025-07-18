@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 import argparse
 import uvicorn
@@ -23,14 +25,8 @@ app.include_router(router)
 
 if __name__ == "__main__":
     # Create the MLflow DB before serving or CLI
-    create_mlflow_database(
-        dbname="mlflow_db",
-        user="postgres",
-        password="your_pass",  # replace with your actual password
-        host="localhost",
-        port="5432"
-    )
-    
+    create_mlflow_database()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, help="Input source (file path)", default="data/test_FD002.txt")
     parser.add_argument("--engine_type", type=str, help="Engine type (e.g., FD002)", default="FD002")

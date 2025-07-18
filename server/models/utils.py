@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv() 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,10 +70,16 @@ def prepare_input_data(source, engine_type: str, condition: str = "standard", ro
 
 
 
-def create_mlflow_database(dbname="mlflow_db", user="postgres", password="your_pass", host="localhost", port="5432"):
+def create_mlflow_database():
     """
     Creates an MLflow PostgreSQL database if it does not already exist.
     """
+    dbname = os.getenv("POSTGRES_DB", "mlflow_db")
+    user = os.getenv("POSTGRES_USER", "postgres")
+    password = os.getenv("POSTGRES_PASSWORD", "your_pass")
+    host = os.getenv("POSTGRES_HOST", "localhost")
+    port = os.getenv("POSTGRES_PORT", "5432")
+
     try:
         conn = psycopg2.connect(dbname="postgres", user=user, password=password, host=host, port=port)
         conn.autocommit = True
