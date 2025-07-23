@@ -66,3 +66,7 @@ logs:
 
 mlflow-ui:
 	mlflow ui --backend-store-uri ${MLFLOW_TRACKING_URI} --port 5000
+
+test-html:
+	pytest --html=reports/test_report.html --self-contained-html
+

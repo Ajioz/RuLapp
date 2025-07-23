@@ -37,7 +37,8 @@ COPY . .
 # -----------------------------
 # ✅ Run Tests (optional layer)
 # -----------------------------
-# RUN pytest tests/ || exit 1  # Enable if you want tests to block build
+RUN pytest tests/ || exit 1  # Enable if you want tests to block build
+RUN pytest --maxfail=1 --disable-warnings || exit 1
 
 # -----------------------------
 # ✅ Expose FastAPI Port
