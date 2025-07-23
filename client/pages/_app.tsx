@@ -1,20 +1,7 @@
 import type { AppProps } from "next/app";
-import { createGlobalStyle } from "styled-components";
+import { GlobalStyle } from "@/styles/globalStyles";
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: "Segoe UI", sans-serif;
-    background: #f9f9f9;
-    margin: 0;
-    padding: 0;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-`;
-
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyle />

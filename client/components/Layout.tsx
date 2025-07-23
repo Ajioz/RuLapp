@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
+import Head from "next/head";
 import styled from "styled-components";
 
 const Nav = styled.nav`
@@ -63,9 +64,10 @@ const ToggleButton = styled.button`
 
 interface LayoutProps {
   children: ReactNode;
+  title?: string;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children, title = "App" }: LayoutProps) {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
 
@@ -77,6 +79,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
+      <Head>
+        <title>{title} | DaroApp</title>
+      </Head>
       <Nav>
         <Header>
           <Logo>🔧 RUL UI</Logo>

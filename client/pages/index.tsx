@@ -4,14 +4,8 @@ import styled from "styled-components";
 import Layout from "@/components/Layout";
 import RULForm from "@/components/RULForm";
 import RULResult from "@/components/RULResult";
+import { PredictionResult } from "@/types";
 
-interface PredictionResult {
-  rul_cycles: number;
-  status: string;
-  rul_days: number;
-  rul_months: number;
-  rul_years: number;
-}
 
 export default function Home() {
   const [result, setResult] = useState<PredictionResult | null>(null);
