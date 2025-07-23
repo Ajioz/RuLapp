@@ -1,27 +1,29 @@
 # Makefile for MLOps Predictive Maintenance Project
 
-.PHONY: help train train-all test coverage lint clean docker-build docker-up docker-down mlflow-ui
+.PHONY: help train train-all test coverage lint clean docker-build docker-up docker-down mlflow-ui docker-train docker-watch logs
 
 help:
 	@echo ""
 	@echo "Available commands:"
-	@echo "  make train            Train single RUL model (default dataset)"
-	@echo "  make train-all        Train all RUL models (FD001–FD004)"
-	@echo "  make test             Run all unit tests"
-	@echo "  make coverage         Show test coverage"
-	@echo "  make lint             Lint code with flake8"
-	@echo "  make clean            Remove compiled artifacts and model outputs"
-	@echo "  make docker-build     Build Docker containers"
-	@echo "  make docker-up        Run FastAPI and MLflow services"
-	@echo "  make docker-down      Stop Docker services"
-	@echo "  make mlflow-ui        Run MLflow Tracking UI"
+	@echo "  make train              Train RUL model on default dataset (FD001)"
+	@echo "  make train-all          Train all RUL models (FD001–FD004)"
+	@echo "  make test               Run unit tests"
+	@echo "  make coverage           Show test coverage"
+	@echo "  make lint               Lint code using flake8"
+	@echo "  make clean              Remove compiled artifacts and outputs"
+	@echo "  make docker-build       Build all Docker containers"
+	@echo "  make docker-up          Run FastAPI, MLflow, Watcher (all services)"
+	@echo "  make docker-down        Stop all services"
+	@echo "  make docker-train       Run training in Docker container"
+	@echo "  make docker-watch       Run raw file watcher in Docker"
+	@echo "  make logs               Tail application logs"
+	@echo "  make mlflow-ui          Run MLflow UI locally (non-Docker)"
 	@echo ""
 
 train:
-	python model/training.py --dataset FD001
+	python scripts/entrypoint.py --mode=train_all
 
-train-all:
-	bash scripts/train_all.sh
+train-all: train
 
 test:
 	pytest tests
@@ -31,7 +33,7 @@ coverage:
 	coverage report -m
 
 lint:
-	flake8 model app tests
+	flake8 model app scripts utils tests
 
 clean:
 	find . -type f -name "*.pyc" -delete
@@ -41,17 +43,26 @@ clean:
 	rm -f reports/*.png
 	rm -f inference/*.csv
 	rm -f .coverage
-	rm -f .flake8
 	rm -f .mypy
+	rm -rf logs/*
 
 docker-build:
-	docker-compose -f deployment/docker-compose.yml build
+	docker compose -f deployment/docker-compose.yml build
 
 docker-up:
-	docker-compose -f deployment/docker-compose.yml up
+	docker compose -f deployment/docker-compose.yml up
 
 docker-down:
-	docker-compose -f deployment/docker-compose.yml down
+	docker compose -f deployment/docker-compose.yml down
+
+docker-train:
+	docker compose run app --mode=train_all
+
+docker-watch:
+	docker compose run watcher
+
+logs:
+	tail -f logs/entrypoint.log
 
 mlflow-ui:
-	mlflow ui --backend-store-uri ${MLFLOW_TRACKING_URI}
+	mlflow ui --backend-store-uri ${MLFLOW_TRACKING_URI} --port 5000

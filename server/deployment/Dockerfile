@@ -20,6 +20,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------
@@ -34,11 +35,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # -----------------------------
-# ✅ Expose API Port
+# ✅ Run Tests (optional layer)
+# -----------------------------
+# RUN pytest tests/ || exit 1  # Enable if you want tests to block build
+
+# -----------------------------
+# ✅ Expose FastAPI Port
 # -----------------------------
 EXPOSE 8000
 
 # -----------------------------
-# ✅ Entry Command
+# ✅ Flexible Entrypoint via Arg
+# Default: Start FastAPI server
+# You can override: docker run ... python scripts/entrypoint.py --mode=train_all
 # -----------------------------
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["python", "scripts/entrypoint.py"]
+CMD ["--mode", "serve"]

@@ -40,10 +40,27 @@ services:
       - ../.env
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:5000
+    command: ["--mode", "serve"]
     ports:
       - "8000:8000"
     volumes:
       - ../mlruns:/app/mlruns
+      - ../data:/app/data
+      - ../logs:/app/logs
+
+  watcher:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: raw-watcher
+    depends_on:
+      - app
+    env_file:
+      - ../.env
+    command: ["--mode", "watch_raw"]
+    volumes:
+      - ../data:/app/data
+      - ../logs:/app/logs
 
 volumes:
   pgdata:
