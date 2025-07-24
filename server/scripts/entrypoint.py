@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from utils.notify import send_notification  # ✅ central notification logic
+from utils.notify import send_notification  # ✅ Notification logic
 
 # ========== 📁 Paths ==========
 RAW_DIR = Path("data/raw")
@@ -32,13 +32,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ========== 📄 Audit Trail ==========
-def log_to_audit(file_name, status):
+def log_to_audit(file_name, status, extra=None):
     is_new_file = not AUDIT_LOG.exists()
     with open(AUDIT_LOG, mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
         if is_new_file:
-            writer.writerow(["timestamp", "file", "status"])
-        writer.writerow([datetime.now().isoformat(), file_name, status])
+            writer.writerow(["timestamp", "file", "status", "info"])
+        writer.writerow([datetime.now().isoformat(), file_name, status, extra or ""])
 
 # ========== 👀 Watcher ==========
 class RawDataHandler(FileSystemEventHandler):
@@ -57,10 +57,26 @@ class RawDataHandler(FileSystemEventHandler):
         result = subprocess.run([sys.executable, str(UTIL_SCRIPT), str(input_path), str(output_path)])
 
         if result.returncode == 0:
-            logger.info(f"Processed and saved to {output_path}")
+            logger.info(f"✅ Processed: {input_path.name}")
             log_to_audit(input_path.name, "processed")
+
+            # ✅ If the file name has a #train tag, trigger training
+            if "#train" in input_path.stem.lower():
+                dataset_id = input_path.stem.split("#")[0]
+                try:
+                    logger.info(f"Triggering training for tagged file: {dataset_id}")
+                    res = subprocess.run([sys.executable, str(TRAIN_SCRIPT), "--dataset", dataset_id])
+                    if res.returncode == 0:
+                        log_to_audit(input_path.name, "trained", dataset_id)
+                        send_notification("✅ Auto-Training Success", f"Model trained for {dataset_id}")
+                    else:
+                        log_to_audit(input_path.name, "train_failed", dataset_id)
+                        send_notification("❌ Auto-Training Failed", f"Model training failed for {dataset_id}")
+                except Exception as e:
+                    logger.error(f"Training failed: {e}")
+                    log_to_audit(input_path.name, "train_exception", str(e))
         else:
-            logger.error(f"Error processing {input_path.name}")
+            logger.error(f"❌ Failed to process {input_path.name}")
             log_to_audit(input_path.name, "failed")
 
 def watch_raw_data():
@@ -79,22 +95,31 @@ def watch_raw_data():
         observer.stop()
     observer.join()
 
-# ========== 🧠 Train All Models ==========
-def train_all_models():
-    datasets = ["FD001", "FD002", "FD003", "FD004"]
-    logger.info("Starting full training pipeline...")
-    print("🔥 Starting full training pipeline...")
+# ========== 🧠 Train Models ==========
+def train_all_models(datasets=None):
+    if not datasets:
+        datasets = ["FD001", "FD002", "FD003", "FD004"]
+
+    logger.info("Starting training for datasets: " + ", ".join(datasets))
+    print("🔥 Training pipeline starting...")
 
     for ds in datasets:
         print(f"🚀 Training on {ds}...")
-        result = subprocess.run([sys.executable, str(TRAIN_SCRIPT), "--dataset", ds])
-        if result.returncode != 0:
-            logger.error(f"Failed to train on {ds}")
-        else:
-            logger.info(f"Finished training on {ds}")
+        try:
+            result = subprocess.run([sys.executable, str(TRAIN_SCRIPT), "--dataset", ds])
+            if result.returncode != 0:
+                logger.error(f"❌ Training failed for {ds}")
+                log_to_audit(ds, "train_failed")
+                send_notification("❌ Training Failed", f"Model training failed for {ds}")
+            else:
+                logger.info(f"✅ Training complete for {ds}")
+                log_to_audit(ds, "trained")
+        except Exception as e:
+            logger.error(f"Exception while training {ds}: {e}")
+            log_to_audit(ds, "train_exception", str(e))
 
-    send_notification("✅ Training Complete", "All models have been trained successfully.")
-    print("✅ All models trained successfully!")
+    print("✅ All models processed.")
+    send_notification("✅ Training Complete", "All selected models have been trained.")
 
 # ========== 🚀 Serve FastAPI ==========
 def start_server():
@@ -115,11 +140,17 @@ if __name__ == "__main__":
         required=True,
         help="Mode to run: watch_raw | train_all | serve"
     )
+    parser.add_argument(
+        "--datasets",
+        nargs="+",
+        help="Optional list of datasets to train (used with train_all)"
+    )
+
     args = parser.parse_args()
 
     if args.mode == "watch_raw":
         watch_raw_data()
     elif args.mode == "train_all":
-        train_all_models()
+        train_all_models(args.datasets)
     elif args.mode == "serve":
         start_server()
