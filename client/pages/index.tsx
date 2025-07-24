@@ -1,25 +1,25 @@
-// pages/index.tsx
-import { useState } from "react";
-import styled from "styled-components";
 import Layout from "@/components/Layout";
-import RULForm from "@/components/RULForm";
-import RULResult from "@/components/RULResult";
-import { PredictionResult } from "@/types";
-
+import styled from "styled-components";
+import Link from "next/link";
 
 export default function Home() {
-  const [result, setResult] = useState<PredictionResult | null>(null);
-
   return (
     <Layout>
       <Container>
-        <Header>🔧 Engine RUL Predictor</Header>
-        <Description>
-          Estimate the Remaining Useful Life of your engine based on sensor
-          data.
-        </Description>
-        <RULForm onResult={setResult} />
-        {result && <RULResult result={result} />}
+        <Title>🔧 Engine Health Intelligence</Title>
+        <Subtitle>
+          Predict Remaining Useful Life (RUL), upload engine sensor data, and
+          manage your models in one unified platform.
+        </Subtitle>
+
+        <ButtonGroup>
+          <Link href="/rul" passHref>
+            <ActionButton>🔍 Predict RUL</ActionButton>
+          </Link>
+          <Link href="/upload" passHref>
+            <ActionButton>📤 Upload Data</ActionButton>
+          </Link>
+        </ButtonGroup>
       </Container>
     </Layout>
   );
@@ -27,20 +27,37 @@ export default function Home() {
 
 const Container = styled.div`
   max-width: 700px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin: 4rem auto;
+  text-align: center;
 `;
 
-const Header = styled.h1`
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+const Title = styled.h1`
+  font-size: 2rem;
+  margin-bottom: 1rem;
 `;
 
-const Description = styled.p`
-  font-size: 1rem;
+const Subtitle = styled.p`
+  font-size: 1.1rem;
   color: #555;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const ActionButton = styled.a`
+  padding: 0.8rem 1.5rem;
+  background-color: #0070f3;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: #005fcc;
+  }
 `;
