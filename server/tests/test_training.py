@@ -1,22 +1,26 @@
-import os
+import pytest
 from pathlib import Path
 from models.training import run_training_pipeline
 
-def test_run_training_pipeline_for_all_sets():
-    datasets = ["FD001", "FD002", "FD003", "FD004"]
-    for dataset in datasets:
-        run_training_pipeline(dataset)
+@pytest.mark.parametrize("dataset_id", ["FD001", "FD002", "FD003", "FD004"])
+def test_run_training_pipeline(dataset_id, monkeypatch, tmp_path):
+    # Redirect model output to temporary path
+    registry_dir = tmp_path / "model_registry"
+    registry_dir.mkdir()
+    reports_dir = tmp_path / "reports"
+    reports_dir.mkdir()
+    inference_dir = tmp_path / "inference"
+    inference_dir.mkdir()
 
-        # Check that models were saved correctly
-        xgb_path = Path(f"model_registry/{dataset}_xgb_model.pkl")
-        rf_path = Path(f"model_registry/{dataset}_rf_model.pkl")
-        features_path = Path(f"model_registry/{dataset}_features.json")
+    monkeypatch.setattr("models.training.Path", lambda *args: tmp_path.joinpath(*args))
 
-        assert xgb_path.exists(), f"Missing XGBoost model for {dataset}"
-        assert rf_path.exists(), f"Missing RandomForest model for {dataset}"
-        assert features_path.exists(), f"Missing feature list for {dataset}"
+    result = run_training_pipeline(dataset_id)
 
-        # Optional: cleanup (if testing in CI or repeatedly)
-        xgb_path.unlink()
-        rf_path.unlink()
-        features_path.unlink()
+    xgb_path = tmp_path / f"models/{dataset_id.lower()}_xgb_model.pkl"
+    rf_path = tmp_path / f"models/{dataset_id.lower()}_rf_model.pkl"
+    features_path = tmp_path / f"models/{dataset_id.lower()}_feature_columns.pkl"
+
+    assert xgb_path.exists(), f"Missing XGBoost model for {dataset_id}"
+    assert rf_path.exists(), f"Missing RandomForest model for {dataset_id}"
+    assert features_path.exists(), f"Missing feature list for {dataset_id}"
+    assert "xgb_metrics" in result and "rf_metrics" in result
