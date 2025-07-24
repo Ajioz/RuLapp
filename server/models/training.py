@@ -62,8 +62,8 @@ def plot_learning_curve(model, X_train, y_train, dataset_id):
     mlflow.log_artifact(lc_path.as_posix())
     print(f"📊 Learning curve saved: {lc_path.name}")
 
-def run_training_pipeline(dataset_id: str):
-    print(f"\n🚀 Training pipeline for {dataset_id}")
+def run_training_pipeline(dataset_id: str, engine_type: str = None, train_path: Path = None, test_path: Path = None):
+    print(f"\n🚀 Starting training pipeline for: {dataset_id}")
 
     def load_dataset(file_path):
         df = pd.read_csv(file_path, sep=r"\s+", header=None)
@@ -71,14 +71,34 @@ def run_training_pipeline(dataset_id: str):
         df.columns = cols
         return df, op_cols, sensor_cols
 
-    train_fp = Path("data") / f"train_{dataset_id}.txt"
-    test_fp = Path("data") / f"test_{dataset_id}.txt"
+    # ✅ Use provided paths or fall back to dataset logic
+    if train_path and test_path:
+        train_fp = train_path
+        test_fp = test_path
+    elif Path(dataset_id).suffix == ".txt":
+        train_fp = Path(dataset_id)
+        test_fp = train_fp
+        print("⚠️ Warning: Same file used for train/test.")
+    else:
+        train_fp = Path("data") / f"train_{dataset_id}.txt"
+        test_fp = Path("data") / f"test_{dataset_id}.txt"
+
+
+    # ===============================
+    # ✅ Load datasets
+    # ===============================
     train_df, op_cols, sensor_cols = load_dataset(train_fp)
     test_df, _, _ = load_dataset(test_fp)
 
+    # ===============================
+    # ✅ Generate RUL column
+    # ===============================
     train_df["RUL"] = train_df.groupby("unit")["time"].transform("max") - train_df["time"]
     test_df["RUL"] = test_df.groupby("unit")["time"].transform("max") - test_df["time"]
 
+    # ===============================
+    # ✅ Feature selection
+    # ===============================
     selector = VarianceThreshold(1e-6)
     selector.fit(train_df[sensor_cols])
     selected_sensors = list(np.array(sensor_cols)[selector.get_support()])
@@ -90,6 +110,9 @@ def run_training_pipeline(dataset_id: str):
     features = op_cols + final_sensors
     print(f"✅ Features selected: {len(features)}")
 
+    # ===============================
+    # 📊 Correlation heatmap
+    # ===============================
     Path("reports").mkdir(exist_ok=True)
     plt.figure(figsize=(10, 8))
     sns.heatmap(train_df[final_sensors + ['RUL']].corr(), cmap="coolwarm", annot=False)
@@ -98,10 +121,14 @@ def run_training_pipeline(dataset_id: str):
     heatmap_path = Path("reports") / f"{dataset_id.lower()}_correlation_heatmap.png"
     plt.savefig(heatmap_path)
     plt.close()
-    print(f"🧊 Correlation heatmap saved: {heatmap_path}")
+    print(f"🧊 Heatmap saved: {heatmap_path}")
 
+    # ===============================
+    # 🧠 MLflow Setup
+    # ===============================
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-    mlflow.set_experiment(dataset_id)
+    experiment_name = engine_type if engine_type else dataset_id
+    mlflow.set_experiment(experiment_name)
     mlflow.sklearn.autolog()
     mlflow.xgboost.autolog()
 
@@ -110,15 +137,21 @@ def run_training_pipeline(dataset_id: str):
 
         X = train_df[features]
         y = train_df["RUL"]
-        X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Only split if no separate test set was provided
+        if train_path and test_path:
+            X_train, y_train = X, y
+        else:
+            X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
         rf = RandomForestRegressor(n_estimators=100, random_state=42)
         xgb = XGBRegressor(n_estimators=100, random_state=42)
 
-        print("🏋️ Training RandomForest and XGBoost...")
+        print("🏋️ Training models...")
         rf.fit(X_train, y_train)
         xgb.fit(X_train, y_train)
-        print("✅ Models trained.")
+        print("✅ Training complete.")
 
         plot_learning_curve(rf, X_train, y_train, dataset_id)
         plot_learning_curve(xgb, X_train, y_train, dataset_id)
@@ -159,8 +192,14 @@ def run_training_pipeline(dataset_id: str):
             input_example=X_test.head(1)
         )
 
-        mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/random_forest", f"{dataset_id}_RandomForest")
-        mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/xgboost", f"{dataset_id}_XGBoost")
+        mlflow.register_model(
+            f"runs:/{mlflow.active_run().info.run_id}/xgboost",
+            f"{experiment_name}_XGBoost"
+        )
+        mlflow.register_model(
+            f"runs:/{mlflow.active_run().info.run_id}/random_forest",
+            f"{experiment_name}_RandomForest"
+        )
 
         predictions = pd.DataFrame({
             "True_RUL": y_test,
@@ -216,10 +255,26 @@ def run_training_pipeline(dataset_id: str):
         "features_used": features
     }
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", required=True, help="Dataset ID or file name (e.g. FD001 or raw_data.txt)")
-    parser.add_argument("--engine_type", required=False, help="Optional custom engine type (e.g. turbo-engine)")
+    parser.add_argument("--dataset", help="Dataset ID (e.g. FD001)", required=False)
+    parser.add_argument("--train_file", help="Path to training data file (.txt)", required=False)
+    parser.add_argument("--test_file", help="Path to test data file (.txt)", required=False)
+    parser.add_argument("--engine_type", help="Optional engine type label", required=False)
     args = parser.parse_args()
 
-    run_training_pipeline(args.dataset, args.engine_type)
+    # 🔀 Allow flexible dataset loading
+    if args.train_file and args.test_file:
+        # Use explicitly provided paths
+        run_training_pipeline(
+            dataset_id=args.dataset or Path(args.train_file).stem,
+            engine_type=args.engine_type,
+            train_path=Path(args.train_file),
+            test_path=Path(args.test_file)
+        )
+    elif args.dataset:
+        run_training_pipeline(dataset_id=args.dataset, engine_type=args.engine_type)
+    else:
+        raise ValueError("Please provide either --dataset or both --train_file and --test_file.")
+
