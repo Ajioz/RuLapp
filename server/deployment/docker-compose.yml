@@ -17,12 +17,17 @@ services:
   mlflow:
     image: mlflow/mlflow
     container_name: mlflow
+    restart: unless-stopped
     depends_on:
       - postgres
     environment:
       BACKEND_STORE_URI: postgresql://mlflow_user:yourpassword@postgres:5432/mlflow_db
       ARTIFACT_ROOT: /mlruns
-    command: mlflow server --backend-store-uri=$${BACKEND_STORE_URI} --default-artifact-root=$${ARTIFACT_ROOT} --host 0.0.0.0 --port 5000
+    command: mlflow server \
+      --backend-store-uri=$${BACKEND_STORE_URI} \
+      --default-artifact-root=$${ARTIFACT_ROOT} \
+      --host 0.0.0.0 \
+      --port 5000
     ports:
       - "5000:5000"
     volumes:
@@ -33,6 +38,7 @@ services:
       context: ..
       dockerfile: deployment/Dockerfile
     container_name: rul-app
+    restart: unless-stopped
     depends_on:
       - postgres
       - mlflow
@@ -47,12 +53,15 @@ services:
       - ../mlruns:/app/mlruns
       - ../data:/app/data
       - ../logs:/app/logs
+      - ../reports:/app/reports
+      - ../model_registry:/app/model_registry
 
   watcher:
     build:
       context: ..
       dockerfile: deployment/Dockerfile
     container_name: raw-watcher
+    restart: unless-stopped
     depends_on:
       - app
     env_file:

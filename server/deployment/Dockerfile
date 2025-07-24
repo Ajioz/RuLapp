@@ -4,10 +4,18 @@
 FROM python:3.9-slim
 
 # -----------------------------
+# ✅ Metadata
+# -----------------------------
+LABEL maintainer="you@example.com" \
+      version="1.0" \
+      description="Context-aware RUL prediction pipeline with FastAPI + MLflow"
+
+# -----------------------------
 # ✅ Environment Config
 # -----------------------------
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    MODE=serve
 
 # -----------------------------
 # ✅ Working Directory
@@ -35,10 +43,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # -----------------------------
-# ✅ Run Tests (optional layer)
+# ✅ Ensure needed folders exist
 # -----------------------------
-RUN pytest tests/ || exit 1  # Enable if you want tests to block build
-RUN pytest --maxfail=1 --disable-warnings || exit 1
+RUN mkdir -p data/raw data/processed logs reports model_registry inference
+
+# -----------------------------
+# ✅ Run Tests (optional)
+# -----------------------------
+# COPY tests/ tests/
+RUN pytest tests/ --maxfail=1 --disable-warnings || exit 1
 
 # -----------------------------
 # ✅ Expose FastAPI Port
@@ -46,9 +59,12 @@ RUN pytest --maxfail=1 --disable-warnings || exit 1
 EXPOSE 8000
 
 # -----------------------------
-# ✅ Flexible Entrypoint via Arg
-# Default: Start FastAPI server
-# You can override: docker run ... python scripts/entrypoint.py --mode=train_all
+# ✅ Healthcheck (optional)
+# -----------------------------
+HEALTHCHECK CMD curl --fail http://localhost:8000/docs || exit 1
+
+# -----------------------------
+# ✅ Flexible Entrypoint
 # -----------------------------
 ENTRYPOINT ["python", "scripts/entrypoint.py"]
-CMD ["--mode", "serve"]
+CMD ["--mode", "${MODE}"]
