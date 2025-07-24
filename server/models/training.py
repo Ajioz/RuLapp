@@ -1,5 +1,6 @@
 import joblib
 import json
+import argparse
 from pathlib import Path
 from datetime import datetime
 import mlflow
@@ -216,5 +217,9 @@ def run_training_pipeline(dataset_id: str):
     }
 
 if __name__ == "__main__":
-    for dataset in ["FD001", "FD002", "FD003", "FD004"]:
-        run_training_pipeline(dataset)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", required=True, help="Dataset ID or file name (e.g. FD001 or raw_data.txt)")
+    parser.add_argument("--engine_type", required=False, help="Optional custom engine type (e.g. turbo-engine)")
+    args = parser.parse_args()
+
+    run_training_pipeline(args.dataset, args.engine_type)

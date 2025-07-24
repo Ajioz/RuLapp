@@ -105,3 +105,64 @@ async def predict_from_file(
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# ===============================
+# 📤 Upload for Preprocessing/Training or RUL Prediction (Tag-Based)
+# ===============================
+@router.post("/upload", tags=["Smart Upload"])
+async def upload_file_for_pipeline(
+    file: UploadFile = File(...),
+    purpose: str = Form(...),    # "tPipeline" or "rul"
+    mType: str = Form(...)       # e.g. "turbo-engine"
+):
+    import shutil
+    import uuid
+    from pathlib import Path
+    import subprocess
+    from models.pipeline import predict_rul
+    from models.utils import prepare_input_data, detect_input_type
+
+    RAW_DIR = Path("data/raw")
+    PROCESSED_DIR = Path("data/processed")
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Save the uploaded file with a UUID-based filename
+    filename = f"{uuid.uuid4()}_{file.filename}"
+    raw_path = RAW_DIR / filename
+    processed_path = PROCESSED_DIR / filename
+
+    with open(raw_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Decide behavior based on 'purpose'
+    if purpose == "tPipeline":
+        # Step 1: Preprocess the file
+        preprocess_result = subprocess.run(
+            ["python", "utils/preprocess.py", str(raw_path), str(processed_path)]
+        )
+        if preprocess_result.returncode != 0:
+            raise HTTPException(status_code=500, detail="❌ Preprocessing failed.")
+
+        # Step 2: Trigger training pipeline
+        train_result = subprocess.run(
+            ["python", "model/training.py", "--dataset", processed_path.name, "--engine_type", mType]
+        )
+        if train_result.returncode != 0:
+            raise HTTPException(status_code=500, detail="❌ Training failed.")
+
+        return {"status": "✅ Success", "message": f"Model trained and registered for: {mType}"}
+
+    elif purpose == "rul":
+        # Step 1: Perform RUL prediction directly
+        try:
+            input_type = detect_input_type(str(raw_path))
+            input_row = prepare_input_data(str(raw_path), engine_type=mType)
+            result = predict_rul(input_row)
+            return {"status": "✅ Success", "result": result}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"❌ RUL Prediction failed: {str(e)}")
+
+    else:
+        raise HTTPException(status_code=400, detail="Invalid purpose tag. Use 'tPipeline' or 'rul'.")
