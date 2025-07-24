@@ -1,6 +1,8 @@
 # Makefile for MLOps Predictive Maintenance Project
 
-.PHONY: help train train-all test coverage lint clean docker-build docker-up docker-down mlflow-ui docker-train docker-watch logs
+.PHONY: help train train-all test coverage lint clean \
+        docker-build docker-up docker-down docker-train docker-watch logs \
+        mlflow-ui test-html jupyter check deploy
 
 help:
 	@echo ""
@@ -18,6 +20,9 @@ help:
 	@echo "  make docker-watch       Run raw file watcher in Docker"
 	@echo "  make logs               Tail application logs"
 	@echo "  make mlflow-ui          Run MLflow UI locally (non-Docker)"
+	@echo "  make jupyter            Launch Jupyter Lab (interactive mode)"
+	@echo "  make check              Run all CI checks (lint + test)"
+	@echo "  make deploy             Deploy to Kubernetes (requires kubectl)"
 	@echo ""
 
 train:
@@ -70,3 +75,16 @@ mlflow-ui:
 test-html:
 	pytest --html=reports/test_report.html --self-contained-html
 
+jupyter:
+	@echo "🚀 Launching Jupyter Lab at http://localhost:8888 ..."
+	jupyter lab --notebook-dir=notebooks --ip=0.0.0.0 --port=8888 --no-browser
+
+check:
+	@echo "🔍 Running CI checks (lint + test)..."
+	make lint
+	make test
+
+deploy:
+	@echo "🚀 Deploying to Kubernetes cluster..."
+	@command -v kubectl >/dev/null 2>&1 || { echo '❌ kubectl is not installed'; exit 1; }
+	kubectl apply -f deployment/k8s/
