@@ -42,8 +42,8 @@ This is an end-to-end MLOps platform for estimating Remaining Useful Life (RUL) 
 ### 🔧 Local Installation
 
 ```bash
-git clone https://github.com/yourusername/rul-predictor.git
-cd rul-predictor
+git clone https://github.com/Ajioz/RuLapp.git
+cd server
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -74,6 +74,7 @@ Uploads with `purpose` and `mType` tags determine routing:
 - `POST /v1/predict/auto` → Detect format + predict
 - `POST /v1/predict/batch` → Upload `.txt`/`.csv`
 - `POST /v1/predict` → Structured JSON input
+- `POST /v1/artefact/upload` → trained artefact image 
 
 ---
 
@@ -90,7 +91,7 @@ make test-html  # Generates reports/test_report.html
 
 ```bash
 make mlflow-ui
-# or view via http://localhost:5000 when dockerized
+or view via http://localhost:5000 when dockerized
 ```
 
 ---
