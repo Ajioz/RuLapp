@@ -21,9 +21,14 @@ interface DesktopNavProps {
   title?: string;
   loggedIn?: boolean;
   router: NextRouter;
+  target: { isHome: boolean; targetKey: string }; 
 }
+/**
+ * Desktop Navigation Component
+ * @param {DesktopNavProps} props - Properties for the desktop navigation
+ */
 
-export default function DesktopNav({ router, title, loggedIn }: DesktopNavProps) {
+export default function DesktopNav({ router, title, loggedIn, target }: DesktopNavProps) {
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const delayTimeout = useRef<NodeJS.Timeout | null>(null);

@@ -1,23 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, NextRouter } from "next/router";
 import DesktopNav from "./DesktopNav";
 import { IoMenu } from "react-icons/io5";
-import Drawer from "./drawer";
 import useNavbarMonitor from "./useNavbarMonitor";
 import styled from "styled-components";
 import Link from "next/link";
 import { getLinks as links } from "@/data";
+import Drawer from "./drawer";
 
-// Types
+
 interface NavbarProps {
   title?: string;
 }
 
 export default function Navbar({ title }: NavbarProps) {
   const router = useRouter();
-  const [loggedIn] = useState(true);
+  const [target, setTarget] = useState({ isHome: true, targetKey: "" });
+  const [loggedIn, setLoggedIn] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_ADMIN_API_KEY) {
@@ -25,12 +25,27 @@ export default function Navbar({ title }: NavbarProps) {
     }
   }, []);
 
+  const processPath = useCallback(() => {
+    const path = router.asPath;
+    if (path === "/") {
+      setTarget({ isHome: true, targetKey: "" });
+    } else {
+      const query = router.query;
+      const targetKey = Object.keys(query)[0];
+      setTarget({ isHome: false, targetKey });
+    }
+  }, []);
+
+  useEffect(() => {
+    processPath();
+  }, [processPath]);
+
   return (
     <>
       <MobileNav isAdmin={isAdmin} />
       <DesktopNav
         router={router}
-        target={{ isHome: false, targetKey: "" }}
+        target={target}
         title={title}
         loggedIn={loggedIn}
       />
@@ -43,13 +58,14 @@ interface MobileNavProps {
 }
 
 const MobileNav: React.FC<MobileNavProps> = ({ isAdmin }) => {
+  const router = useRouter();
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isOpen, setIsOpen] = useState(false);
   const handleToggleMenu = () => setIsOpen((prev) => !prev);
 
   return (
     <MobileWrapper>
-      <FirstNavBar >
+      <FirstNavBar>
         <Logo>🔧 RUL UI</Logo>
         <div style={{ display: "flex", alignItems: "center" }}>
           <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
