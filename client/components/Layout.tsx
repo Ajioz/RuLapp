@@ -73,7 +73,7 @@ interface LayoutProps {
 export default function Layout({ children, title = "App" }: LayoutProps) {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   // Check admin status from env
   useEffect(() => {
