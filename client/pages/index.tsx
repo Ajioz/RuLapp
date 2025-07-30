@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import Layout from "@/components/Layout";
+import Layout from "@/components/Layout/Layout";
 import styled from "styled-components";
 import Link from "next/link";
 
 export default function Home() {
-
   const [isAdmin, setIsAdmin] = useState(false);
 
   // Check for admin key from env

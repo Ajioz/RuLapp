@@ -1,4 +1,4 @@
-import Layout from "../components/Layout";
+import Layout from "../components/Layout/Layout";
 import styled from "styled-components";
 
 export default function LoginPage() {

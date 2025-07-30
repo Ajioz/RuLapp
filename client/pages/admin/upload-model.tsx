@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Head from "next/head";
-import Layout from "@/components/Layout";
+import Layout from "@/components/Layout/Layout";
 
 const Container = styled.div`
   max-width: 600px;

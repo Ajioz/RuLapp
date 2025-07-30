@@ -36,13 +36,10 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta
-            name="description"
-            content="Engine Health Intelligence: Predict Remaining Useful Life (RUL), upload engine sensor data, and manage models."
+          <link
+            href="https://fonts.googleapis.com/css2?family=Catamaran:wght@400;500;600;700;800&family=Teko:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
           />
-          {/* Add other meta tags or fonts here if needed */}
         </Head>
         <body>
           <Main />
