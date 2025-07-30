@@ -1,0 +1,189 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import DesktopNav from "./DesktopNav";
+import { IoMenu } from "react-icons/io5";
+import Drawer from "./drawer";
+import useNavbarMonitor from "./useNavbarMonitor";
+import styled from "styled-components";
+import Link from "next/link";
+import { getLinks as links } from "@/data";
+
+// Types
+interface NavbarProps {
+  title?: string;
+}
+
+export default function Navbar({ title }: NavbarProps) {
+  const router = useRouter();
+  const [loggedIn] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ADMIN_API_KEY) {
+      setIsAdmin(true);
+    }
+  }, []);
+
+
+  return (
+    <>
+      <MobileNav
+        links={links(isAdmin)}
+        router={router}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
+      <DesktopNav
+        router={router}
+        target={{ isHome: false, targetKey: "" }}
+        title={title}
+        loggedIn={loggedIn}
+      />
+    </>
+  );
+}
+
+interface MobileNavProps {
+  links: { href: string; label: string }[];
+  router: ReturnType<typeof useRouter>;
+  darkMode: boolean;
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MobileNav: React.FC<MobileNavProps> = ({
+  links,
+  router,
+  darkMode,
+  setDarkMode,
+}) => {
+  const { navbarRef, isOutOfView } = useNavbarMonitor();
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleMenu = () => setIsOpen((prev) => !prev);
+
+  return (
+    <MobileWrapper>
+      <FirstNavBar ref={navbarRef}>
+        <Logo>🔧 RUL UI</Logo>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <ToggleButton onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? "☀️ Light" : "🌙 Dark"}
+          </ToggleButton>
+          <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
+        </div>
+        {!isOutOfView && (
+          <Drawer isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
+        )}
+      </FirstNavBar>
+
+      <SecondaryNavbar visible={isOutOfView}>
+        <NavLinks>
+          {links.map((link) => (
+            <Link key={link.href} href={link.href} passHref>
+              <NavLink $active={router.pathname === link.href}>
+                {link.label}
+              </NavLink>
+            </Link>
+          ))}
+        </NavLinks>
+        <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
+        {isOutOfView && (
+          <Drawer isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
+        )}
+      </SecondaryNavbar>
+    </MobileWrapper>
+  );
+};
+
+// Styled Components
+const MobileWrapper = styled.div`
+  margin: -100px auto;
+  z-index: 10;
+  position: relative;
+  top: 100px;
+  width: 100%;
+  background: transparent;
+  box-shadow: 2px 1px 2px 2px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const FirstNavBar = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  margin: -100px auto;
+  padding: 1rem 2rem;
+  background: transparent;
+  box-shadow: 2px 1px 2px 2px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+`;
+
+const SecondaryNavbar = styled.div<{ visible: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #263238;
+  color: white;
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  margin: -5px auto;
+  z-index: 20;
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transform: ${({ visible }) =>
+    visible ? "translateY(0)" : "translateY(-100%)"};
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 1.5rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`;
+
+const NavLink = styled.button<{ $active?: boolean }>`
+  color: ${({ $active }) => ($active ? "#ffd700" : "#ffffff")};
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  text-decoration: ${({ $active }) => ($active ? "underline" : "none")};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Logo = styled.div`
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+`;
+
+const ToggleButton = styled.button`
+  margin-left: 1rem;
+  padding: 0.3rem 0.6rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+`;
