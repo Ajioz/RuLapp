@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <Layout>
       <Container>
-        <Title>🔧 Engine Health Intelligence</Title>
+        <Title>Engine Health Intelligence</Title>
         <Subtitle>
           Predict Remaining Useful Life (RUL), upload engine sensor data, and
           manage your models in one unified platform.
@@ -48,10 +48,11 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-const ActionButton = styled.a`
+const ActionButton = styled.button`
   padding: 0.8rem 1.5rem;
   background-color: #0070f3;
   color: white;
+  border: none;
   border-radius: 5px;
   font-weight: bold;
   text-decoration: none;
