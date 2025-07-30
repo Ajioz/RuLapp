@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Head from "next/head";
+import Layout from "@/components/Layout";
 
 const Container = styled.div`
   max-width: 600px;
@@ -91,7 +92,7 @@ export default function UploadModelPage() {
   };
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>Upload Model Artifact</title>
       </Head>
@@ -126,6 +127,6 @@ export default function UploadModelPage() {
           {message && <Message success={isSuccess}>{message}</Message>}
         </Form>
       </Container>
-    </>
+    </Layout>
   );
 }

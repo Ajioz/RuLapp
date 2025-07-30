@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Head from "next/head";
 import styled from "styled-components";
 
@@ -26,10 +26,13 @@ const NavLinks = styled.div`
   }
 `;
 
-const NavLink = styled.a<{ active?: boolean }>`
-  color: ${({ active }) => (active ? "#0056b3" : "#0070f3")};
+const NavLink = styled.button<{ $active?: boolean }>`
+  color: ${({ $active }) => ($active ? "#0056b3" : "#0070f3")};
   font-weight: 500;
-  text-decoration: ${({ active }) => (active ? "underline" : "none")};
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  text-decoration: ${({ $active }) => ($active ? "underline" : "none")};
   cursor: pointer;
 
   &:hover {
@@ -70,11 +73,22 @@ interface LayoutProps {
 export default function Layout({ children, title = "App" }: LayoutProps) {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check admin status from env
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ADMIN_API_KEY) {
+      setIsAdmin(true);
+    }
+  }, []);
 
   const links = [
     { href: "/", label: "Home" },
     { href: "/rul", label: "Predict" },
     { href: "/upload", label: "Upload" },
+    ...(isAdmin
+      ? [{ href: "/admin/upload-model", label: "⚙ Upload Artefact" }]
+      : []),
   ];
 
   return (
@@ -92,7 +106,7 @@ export default function Layout({ children, title = "App" }: LayoutProps) {
         <NavLinks>
           {links.map((link) => (
             <Link key={link.href} href={link.href} passHref>
-              <NavLink active={router.pathname === link.href}>
+              <NavLink $active={router.pathname === link.href}>
                 {link.label}
               </NavLink>
             </Link>

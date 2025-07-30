@@ -1,8 +1,19 @@
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import styled from "styled-components";
 import Link from "next/link";
 
 export default function Home() {
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check for admin key from env
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ADMIN_API_KEY) {
+      setIsAdmin(true);
+    }
+  }, []);
+
   return (
     <Layout>
       <Container>
@@ -19,6 +30,11 @@ export default function Home() {
           <Link href="/upload" passHref>
             <ActionButton>📤 Upload Data</ActionButton>
           </Link>
+          {isAdmin && (
+            <Link href="/admin/upload-model" passHref>
+              <ActionButton>⚙️ Upload Artefact</ActionButton>
+            </Link>
+          )}
         </ButtonGroup>
       </Container>
     </Layout>
