@@ -70,9 +70,9 @@ export default function DesktopNav({ router, title, loggedIn }: DesktopNavProps)
           style={{ cursor: "pointer", borderRadius: "50%" }}
         />
         <NavList>
-          {menu.map(({ title, link }: MenuItem) => (
-            <NavItem key={title} onClick={() => goLink(link)}>
-              {title}
+          {menu(false).map(({ label, href }) => (
+            <NavItem key={label} onClick={() => goLink(href)}>
+              {label}
             </NavItem>
           ))}
         </NavList>
@@ -94,9 +94,9 @@ export default function DesktopNav({ router, title, loggedIn }: DesktopNavProps)
       <SecondaryNavbar $visible={isOutOfView}>
         <Section>
           <NavList>
-            {menu.map(({ title, link }: MenuItem) => (
-              <NavItem key={title + link} onClick={() => goLink(link)}>
-                {title}
+            {menu(false).map(({ label, href }) => (
+              <NavItem key={label + href} onClick={() => goLink(href)}>
+                {label}
               </NavItem>
             ))}
           </NavList>

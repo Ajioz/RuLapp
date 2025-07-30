@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const useNavbarMonitor = () => {
   const [isOutOfView, setIsOutOfView] = useState(false);
-  const navbarRef = useRef<HTMLElement | null>(null);
+  // Ref to attach to the navbar element for intersection observation
+  const navbarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
