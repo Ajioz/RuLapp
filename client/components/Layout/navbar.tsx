@@ -25,15 +25,9 @@ export default function Navbar({ title }: NavbarProps) {
     }
   }, []);
 
-
   return (
     <>
-      <MobileNav
-        links={links(isAdmin)}
-        router={router}
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-      />
+      <MobileNav isAdmin={isAdmin} />
       <DesktopNav
         router={router}
         target={{ isHome: false, targetKey: "" }}
@@ -45,30 +39,19 @@ export default function Navbar({ title }: NavbarProps) {
 }
 
 interface MobileNavProps {
-  links: { href: string; label: string }[];
-  router: ReturnType<typeof useRouter>;
-  darkMode: boolean;
-  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  isAdmin: boolean;
 }
 
-const MobileNav: React.FC<MobileNavProps> = ({
-  links,
-  router,
-  darkMode,
-  setDarkMode,
-}) => {
+const MobileNav: React.FC<MobileNavProps> = ({ isAdmin }) => {
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isOpen, setIsOpen] = useState(false);
   const handleToggleMenu = () => setIsOpen((prev) => !prev);
 
   return (
     <MobileWrapper>
-      <FirstNavBar ref={navbarRef}>
+      <FirstNavBar >
         <Logo>🔧 RUL UI</Logo>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <ToggleButton onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? "☀️ Light" : "🌙 Dark"}
-          </ToggleButton>
           <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
         </div>
         {!isOutOfView && (
@@ -78,7 +61,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
 
       <SecondaryNavbar visible={isOutOfView}>
         <NavLinks>
-          {links.map((link) => (
+          {links(isAdmin).map((link) => (
             <Link key={link.href} href={link.href} passHref>
               <NavLink $active={router.pathname === link.href}>
                 {link.label}

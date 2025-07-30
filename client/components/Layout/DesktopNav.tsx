@@ -3,11 +3,7 @@ import Image from "next/image";
 import styled, { css } from "styled-components";
 import useNavbarMonitor from "./useNavbarMonitor";
 import Donate from "./donate";
-// Update the import path to the correct relative path if "@/data" does not exist.
-// For example, if your data file is at 'client/data/index.ts', use:
 import { getLinks as menu } from "../../data";
-// Or adjust the path as needed to match your project structure.
-import { useRouter } from "next/router";
 
 interface MenuItem {
   title: string;
@@ -19,16 +15,18 @@ interface HelpLink {
   href: string;
 }
 
+import { NextRouter } from "next/router";
+
 interface DesktopNavProps {
   title?: string;
   loggedIn?: boolean;
+  router: NextRouter;
 }
 
-export default function DesktopNav({ title, loggedIn }: DesktopNavProps) {
+export default function DesktopNav({ router, title, loggedIn }: DesktopNavProps) {
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const delayTimeout = useRef<NodeJS.Timeout | null>(null);
-  const router = useRouter();
 
   const handleMouseEnter = () => {
     if (delayTimeout.current) clearTimeout(delayTimeout.current);

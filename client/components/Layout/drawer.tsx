@@ -20,7 +20,13 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, handleToggleMenu }) => {
     push(link);
   };
 
-  const renderMenuItems = (items: typeof menu) =>
+  type MenuItem = {
+    icon: React.ReactNode;
+    label: string;
+    href: string;
+  };
+  
+  const renderMenuItems = (items: MenuItem[]) =>
     items?.map(({ icon, label, href }) => (
       <DrawerMenuItem key={label} onClick={() => openChoice(href)}>
         <IconWrapper>{icon}</IconWrapper>
@@ -40,7 +46,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, handleToggleMenu }) => {
         />
         <CloseButton onClick={handleToggleMenu}>✕</CloseButton>
       </DrawerHeader>
-      {renderMenuItems(menu)}
+      {renderMenuItems(menu(false))}
     </MenuContainer>
   );
 };
