@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export default function FAQPage() {
   return (
-    <Layout>
+    <Layout title="FAQ">
       <Container>
         <h1>❓ FAQ</h1>
         <ul>

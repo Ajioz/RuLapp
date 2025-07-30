@@ -70,7 +70,7 @@ interface LayoutProps {
   title?: string;
 }
 
-export default function Layout({ children, title = "App" }: LayoutProps) {
+export default function Layout({ children, title = "RUL" }: LayoutProps) {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
@@ -94,7 +94,7 @@ export default function Layout({ children, title = "App" }: LayoutProps) {
   return (
     <>
       <Head>
-        <title>{title} | DaroApp</title>
+        <title>{title} | RUL</title>
       </Head>
       <Nav>
         <Header>

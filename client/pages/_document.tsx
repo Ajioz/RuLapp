@@ -25,12 +25,7 @@ export default class MyDocument extends Document {
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-          </>
-        ),
+        styles: [initialProps.styles, sheet.getStyleElement()],
       };
     } finally {
       sheet.seal();
@@ -40,7 +35,15 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta
+            name="description"
+            content="Engine Health Intelligence: Predict Remaining Useful Life (RUL), upload engine sensor data, and manage models."
+          />
+          {/* Add other meta tags or fonts here if needed */}
+        </Head>
         <body>
           <Main />
           <NextScript />

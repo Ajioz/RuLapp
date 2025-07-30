@@ -16,7 +16,7 @@ export default function RULPage() {
   const [result, setResult] = useState<PredictionResult | null>(null);
 
   return (
-    <Layout>
+    <Layout title="Predict RUL">
       <Container>
         <Header>🔧 Engine RUL Predictor</Header>
         <Description>

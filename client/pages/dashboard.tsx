@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export default function DashboardPage() {
   return (
-    <Layout>
+    <Layout title="Dashboard">
       <Container>
         <h1>📊 Dashboard</h1>
         <p>Model status, training logs, and analytics coming soon...</p>

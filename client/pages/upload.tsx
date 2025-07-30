@@ -40,7 +40,7 @@ export default function UploadPage() {
   };
 
   return (
-    <Layout>
+    <Layout title="Upload Data">
       <Container>
         <h2>📤 Upload Engine Data</h2>
         <p>Choose a raw engine data file and tag its purpose.</p>

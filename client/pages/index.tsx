@@ -15,7 +15,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout>
+    <Layout title="Home">
       <Container>
         <Title>Engine Health Intelligence</Title>
         <Subtitle>

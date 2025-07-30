@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export default function AboutPage() {
   return (
-    <Layout>
+    <Layout title="About">
       <Container>
         <h1>ℹ️ About</h1>
         <p>

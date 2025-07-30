@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export default function LoginPage() {
   return (
-    <Layout>
+    <Layout title="Login">
       <Container>
         <h1>🔐 Login</h1>
         <p>Login functionality coming soon...</p>
