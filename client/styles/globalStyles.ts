@@ -1,18 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
-  /* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #fafafa;
-    color: #333;
-  } */
-
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 *{
@@ -63,6 +51,7 @@ a{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 15vh;
   min-height: 100vh;
   box-sizing: border-box;
   overflow: hidden;

@@ -5,10 +5,6 @@ import useNavbarMonitor from "./useNavbarMonitor";
 import Donate from "./donate";
 import { getLinks as menu } from "../../data";
 
-interface MenuItem {
-  title: string;
-  link: string;
-}
 
 interface HelpLink {
   text: string;
@@ -31,6 +27,7 @@ interface DesktopNavProps {
 export default function DesktopNav({ router, title, loggedIn, target }: DesktopNavProps) {
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false)
   const delayTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {
@@ -47,7 +44,6 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
   const helpLinks: HelpLink[] = [
     { text: "Help Centre", href: "#" },
     { text: "Contact Us", href: "#" },
-    { text: "Need Prayer", href: "#" },
     { text: "Report Emergency", href: "#" },
     { text: "FAQs", href: "#" },
   ];
@@ -75,7 +71,7 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
           style={{ cursor: "pointer", borderRadius: "50%", marginLeft: "50px" }}
         />
         <NavList>
-          {menu(false).map(({ label, href }) => (
+          {menu(isAdmin).map(({ label, href }) => (
             <NavItem key={label} onClick={() => goLink(href)}>
               {label}
             </NavItem>
@@ -98,6 +94,18 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
 
       <SecondaryNavbar $visible={isOutOfView}>
         <Section>
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            height={50}
+            width={50}
+            onClick={goHome}
+            style={{
+              cursor: "pointer",
+              borderRadius: "50%",
+              marginLeft: "50px",
+            }}
+          />
           <NavList>
             {menu(false).map(({ label, href }) => (
               <NavItem key={label + href} onClick={() => goLink(href)}>
@@ -195,6 +203,7 @@ const SecondaryNavbar = styled.div<{ $visible: boolean }>`
 
 const Section = styled.div`
   display: flex;
+  margin-top: 30px;
   align-items: center;
   justify-content: space-around;
 `;
