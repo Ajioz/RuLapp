@@ -40,7 +40,6 @@ export const CustomBtn: React.FC<CustomBtnProps> = ({
 };
 
 /* Styled Components */
-
 const DonateContainer = styled.div`
   display: flex;
   width: 300px;
