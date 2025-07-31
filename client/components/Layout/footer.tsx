@@ -57,7 +57,7 @@ export default function Footer() {
       </SocialIcons>
 
       <p style={{ marginTop: "0.5rem" }}>
-        © {new Date().getFullYear()} DaroApp. All rights reserved.
+        © {new Date().getFullYear()} RuLApp. All rights reserved.
       </p>
     </FooterWrapper>
   );

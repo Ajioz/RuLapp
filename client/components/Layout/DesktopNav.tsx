@@ -67,12 +67,12 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
     <NavbarContainer>
       <MainNavbar ref={navbarRef}>
         <Image
-          src="/images/logo/logo-2.png"
+          src="/logo.png"
           alt="Logo"
-          height={36}
-          width={114}
+          height={50}
+          width={50}
           onClick={goHome}
-          style={{ cursor: "pointer", borderRadius: "50%" }}
+          style={{ cursor: "pointer", borderRadius: "50%", marginLeft: "50px" }}
         />
         <NavList>
           {menu(false).map(({ label, href }) => (
@@ -119,7 +119,7 @@ const NavbarContainer = styled.div`
   position: relative;
   top: 100px;
   width: 100%;
-  background: transparent;
+  background: #212121;
   box-shadow: 2px 1px 2px 2px rgba(0, 0, 0, 0.3);
   font-size: 14px;
 

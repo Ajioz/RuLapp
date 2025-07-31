@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Layout from "@/components/Layout/Layout_bkup";
+import Layout from "@/components/Layout";
 import styled from "styled-components";
 import Link from "next/link";
 
