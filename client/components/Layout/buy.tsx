@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { IoBasket, IoHeart, IoSearch } from "react-icons/io5";
+import { IoBasket, IoBagSharp, IoSearch } from "react-icons/io5";
 import styled from "styled-components";
 
 interface CustomBtnProps {
@@ -17,7 +17,7 @@ const Donate: React.FC = () => {
       <IoBasket size={30} />
       <CustomBtn
         showHeart={true}
-        value="Donate"
+        value="Buy Plan"
         onClick={() => push("/contact")}
       />
     </DonateContainer>
@@ -33,7 +33,7 @@ export const CustomBtn: React.FC<CustomBtnProps> = ({
 }) => {
   return (
     <StyledDonateBtn onClick={onClick}>
-      {showHeart && <IoHeart size={20} style={{ color: "#fff", zIndex: 1 }} />}
+      {showHeart && <IoBagSharp size={20} style={{ color: "#fff", zIndex: 1 }} />}
       <span>{value}</span>
     </StyledDonateBtn>
   );

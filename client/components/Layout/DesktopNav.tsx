@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 import useNavbarMonitor from "./useNavbarMonitor";
-import Donate from "./donate";
+import Donate from "./buy";
 import { getLinks as menu } from "../../data";
 
 
@@ -128,7 +128,7 @@ const NavbarContainer = styled.div`
   top: 100px;
   width: 100%;
   background: #212121;
-  box-shadow: 2px 1px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 1px 2px 1px rgba(0, 0, 0, 0.3);
   font-size: 14px;
 
   @media (max-width: 768px) {
