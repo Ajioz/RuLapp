@@ -38,6 +38,7 @@ export default function RULResult({ result }: { result: any }) {
 
 const ResultWrapper = styled.div`
   margin-top: 2rem;
+  margin-bottom: 10vh;
   padding: 2rem;
   background: #f9fafb;
   border: 1px solid #e2e8f0;
