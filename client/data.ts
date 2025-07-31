@@ -1,10 +1,7 @@
 import {
-  IoChatbubbles,
   IoHome,
-  IoImage,
   IoInformationCircle,
   IoSchool,
-  IoMailUnread,
 } from "react-icons/io5";
 
 export const getLinks = (isAdmin: boolean) => [
@@ -14,7 +11,7 @@ export const getLinks = (isAdmin: boolean) => [
         icon: IoHome,
     },
     {
-        href: "/rul",
+        href: "/predict",
         label: "Predict",
         icon: IoInformationCircle,
     },

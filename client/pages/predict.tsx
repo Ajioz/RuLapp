@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Layout from "@/components/Layout";
 import RULForm from "@/components/RULForm";
 import RULResult from "@/components/RULResult";
+import HeroBreadcrumb from "@/components/Layout/breadcrumb";
 
 interface PredictionResult {
   rul_cycles: number;
@@ -17,6 +18,12 @@ export default function RULPage() {
 
   return (
     <Layout title="Predict RUL">
+      <HeroBreadcrumb
+        title="Remaining Useful Life Prediction"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+        ]}
+      />
       <Container>
         <Header>🔧 Engine RUL Predictor</Header>
         <Description>

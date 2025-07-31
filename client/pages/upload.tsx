@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Layout from "@/components/Layout";
+import HeroBreadcrumb from "@/components/Layout/breadcrumb";
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -41,6 +42,12 @@ export default function UploadPage() {
 
   return (
     <Layout title="Upload Data">
+      <HeroBreadcrumb
+        title="Upload Data"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+        ]}
+      />
       <Container>
         <h2>📤 Upload Engine Data</h2>
         <p>Choose a raw engine data file and tag its purpose.</p>

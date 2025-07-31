@@ -2,49 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout_bkup";
+import HeroBreadcrumb from "@/components/Layout/breadcrumb";
 
-const Container = styled.div`
-  max-width: 600px;
-  margin: 4rem auto;
-  padding: 2rem;
-  border-radius: 12px;
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-`;
 
-const Title = styled.h2`
-  text-align: center;
-  color: #333;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const Input = styled.input`
-  padding: 0.75rem;
-  font-size: 1rem;
-`;
-
-const Button = styled.button`
-  background-color: #0070f3;
-  color: white;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #005bb5;
-  }
-`;
-
-const Message = styled.p<{ success?: boolean }>`
-  color: ${(props) => (props.success ? "green" : "red")};
-`;
 
 export default function UploadModelPage() {
   const [mType, setMType] = useState("");
@@ -96,6 +56,12 @@ export default function UploadModelPage() {
       <Head>
         <title>Upload Model Artifact</title>
       </Head>
+      <HeroBreadcrumb
+        title="Admin Upload Model"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+        ]}
+      />
       <Container>
         <Title>Upload Trained Model</Title>
         <Form onSubmit={handleSubmit}>
@@ -130,3 +96,47 @@ export default function UploadModelPage() {
     </Layout>
   );
 }
+
+
+const Container = styled.div`
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  color: #333;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Input = styled.input`
+  padding: 0.75rem;
+  font-size: 1rem;
+`;
+
+const Button = styled.button`
+  background-color: #0070f3;
+  color: white;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #005bb5;
+  }
+`;
+
+const Message = styled.p<{ success?: boolean }>`
+  color: ${(props) => (props.success ? "green" : "red")};
+`;

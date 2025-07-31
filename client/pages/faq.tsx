@@ -1,9 +1,16 @@
+import HeroBreadcrumb from "@/components/Layout/breadcrumb";
 import Layout from "../components/Layout";
 import styled from "styled-components";
 
 export default function FAQPage() {
   return (
     <Layout title="FAQ">
+      <HeroBreadcrumb
+        title="Frequently Asked Questions"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+        ]}
+      />
       <Container>
         <h1>❓ FAQ</h1>
         <ul>

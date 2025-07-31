@@ -6,6 +6,7 @@ import Link from "next/link";
 
 interface BreadcrumbItem {
   label: string;
+  icon?: React.ReactNode; // Optional icon for the breadcrumb
   href?: string; // If undefined, it's the current page
 }
 
@@ -13,7 +14,6 @@ interface HeroBreadcrumbProps {
   title: string;
   breadcrumbs: BreadcrumbItem[];
 }
-
 
 const HeroBreadcrumb: React.FC<HeroBreadcrumbProps> = ({
   title,
@@ -28,7 +28,10 @@ const HeroBreadcrumb: React.FC<HeroBreadcrumbProps> = ({
             {crumb.href ? (
               <Link href={crumb.href}>{crumb.label}</Link>
             ) : (
-              <span>{crumb.label}</span>
+              <>
+                <span>{crumb.icon}</span>
+                <span>{crumb.label}</span>
+              </>
             )}
             {index < breadcrumbs.length - 1 && <span>/</span>}
           </React.Fragment>
@@ -39,7 +42,6 @@ const HeroBreadcrumb: React.FC<HeroBreadcrumbProps> = ({
 };
 
 export default HeroBreadcrumb;
-
 
 // Styled Components
 const Container = styled.div`
