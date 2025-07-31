@@ -9,11 +9,11 @@ interface PageHeadProps {
 
 const PageHead: React.FC<PageHeadProps> = ({ headTitle, description, keywords }) => {
     const defaultTitle =
-        "ajiozi | Committed to Helping the Unreached and Less Privileged";
+        "Ajiozi | Remaining Useful Life (RUL) Predictive Maintenance Solutions";
     const defaultDescription =
-        "ajiozi is an NGO committed to helping the unreached and less privileged in the society through various initiatives and programs.";
+        "Ajiozi provides advanced Remaining Useful Life (RUL) predictive maintenance solutions to optimize asset performance, reduce downtime, and extend equipment lifespan.";
     const defaultKeywords =
-        "ajiozi, NGO, helping the unreached, less privileged, community support, charity, non-profit organization";
+        "Ajiozi, RUL, predictive maintenance, remaining useful life, asset management, equipment monitoring, machine learning, industrial IoT, predictive analytics";
 
     const logoUrl =
         process.env.NEXT_PUBLIC_LOGO_URL || "https://www.ajiozi.com/images/logo.png";
@@ -21,9 +21,14 @@ const PageHead: React.FC<PageHeadProps> = ({ headTitle, description, keywords })
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "ajioziNigeria",
-        url: "https://www.ajiozicom",
+        name: "Ajiozi",
+        url: "https://www.ajiozi.com",
         logo: logoUrl,
+        parentOrganization: {
+            "@type": "Organization",
+            name: "Ajiozi",
+            url: "https://www.ajiozi.com",
+        },
         sameAs: [
             "https://web.facebook.com/ajiozinitiative",
             "https://x.com/ajiozi",
@@ -41,7 +46,7 @@ const PageHead: React.FC<PageHeadProps> = ({ headTitle, description, keywords })
             {
                 "@type": "Person",
                 name: "Ajiroghene Sunday",
-                jobTitle: "Team Lead, Community Support",
+                jobTitle: "Team Lead, Predictive Maintenance",
             },
         ],
         foundingDate: "2020-01-01",
@@ -54,7 +59,8 @@ const PageHead: React.FC<PageHeadProps> = ({ headTitle, description, keywords })
             postalCode: "332213",
             addressCountry: "NG",
         },
-        additionalType: "Tech Based Company",
+        additionalType: "Predictive Maintenance Technology Company",
+        description: defaultDescription,
     };
 
     return (
@@ -73,7 +79,7 @@ const PageHead: React.FC<PageHeadProps> = ({ headTitle, description, keywords })
                     property="og:description"
                     content={description || defaultDescription}
                 />
-                <meta property="og:url" content="https://www.ajiozicom" />
+                <meta property="og:url" content="https://www.ajiozi.com" />
                 <meta property="og:image" content={logoUrl} />
                 <meta property="og:type" content="website" />
 
