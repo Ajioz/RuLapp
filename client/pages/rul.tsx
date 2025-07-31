@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Layout from "@/components/Layout/Layout_bkup";
+import Layout from "@/components/Layout";
 import RULForm from "@/components/RULForm";
 import RULResult from "@/components/RULResult";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Layout from "@/components/Layout/Layout_bkup";
+import Layout from "@/components/Layout";
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);

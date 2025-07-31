@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Layout from "@/components/Layout/Layout_bkup";
+import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 
 export default function SignupPage() {

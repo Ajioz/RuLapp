@@ -1,4 +1,4 @@
-import Layout from "../components/Layout/Layout_bkup";
+import Layout from "../components/Layout";
 import styled from "styled-components";
 
 export default function AboutPage() {
