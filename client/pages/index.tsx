@@ -1,79 +1,15 @@
-import { useEffect, useState } from "react";
+import Hero from "@/components/Hero";
 import Layout from "@/components/Layout";
-import styled from "styled-components";
-import Link from "next/link";
+import RollOver from "@/components/Rollover";
+import React from "react";
 
-export default function Home() {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // Check for admin key from env
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_ADMIN_API_KEY) {
-      setIsAdmin(true);
-    }
-  }, []);
-
+const LandingPage = () => {
   return (
-    <Layout title="Home">
-      <Container>
-        <Title>Engine Health Intelligence</Title>
-        <Subtitle>
-          Predict Remaining Useful Life (RUL), upload engine sensor data, and
-          manage your models in one unified platform.
-        </Subtitle>
-
-        <ButtonGroup>
-          <Link href="/rul" passHref>
-            <ActionButton>🔍 Predict RUL</ActionButton>
-          </Link>
-          <Link href="/upload" passHref>
-            <ActionButton>📤 Upload Data</ActionButton>
-          </Link>
-          {isAdmin && (
-            <Link href="/admin/upload-model" passHref>
-              <ActionButton>⚙️ Upload Artefact</ActionButton>
-            </Link>
-          )}
-        </ButtonGroup>
-      </Container>
+    <Layout title="About">
+      <Hero />
+      <RollOver />
     </Layout>
   );
-}
+};
 
-const Container = styled.div`
-  max-width: 700px;
-  margin: 4rem auto;
-  text-align: center;
-`;
-
-const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-`;
-
-const Subtitle = styled.p`
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 2rem;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-`;
-
-const ActionButton = styled.button`
-  padding: 0.8rem 1.5rem;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: background 0.2s;
-
-  &:hover {
-    background-color: #005fcc;
-  }
-`;
+export default LandingPage;
