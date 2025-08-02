@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import Image from "next/image";
 
-const images = [
-  "/images/main-slider/needy8.jpg",
-  "/images/main-slider/needy9.jpg",
-  "/images/main-slider/needy7.jpg",
+const info = [
+  { img: "/images/rollover_1.webp", text: "Predict Remaining Useful Life with Confidence" },
+  { img: "/images/rollover_2.webp", text: "Advanced Machine Learning for Accurate RUL" },
+  { img: "/images/rollover_3.webp", text: "Optimize Maintenance and Reduce Downtime" },
+  { img: "/images/rollover_4.webp", text: "Empower Your Asset Management Decisions" },
+  { img: "/images/rollover_5.webp", text: "Seamless Integration for Smart Operations" },
 ];
-
-
 
 const Hero: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,10 +28,10 @@ const Hero: React.FC = () => {
   return (
     <HeroContainer>
       <BackgroundContainer>
-        {images.map((img, index) => (
+        {info.map((item, index) => (
           <BackgroundLayer
-            key={img}
-            $image={img}
+            key={item.img}
+            $image={item.img}
             $active={index === currentIndex}
             $fading={index === prevIndex}
           />
@@ -41,14 +41,15 @@ const Hero: React.FC = () => {
       <GradientOverlay />
 
       <HeroText>
-        <h1>Achieving Peace through ministering to the Needy</h1>
+        <h1>{item.text}</h1>
         <p>
-          Divine Assistance Relief Organization (DARO) believes in the power of
-          love by touching lives as a tool for healing and bringing the sense of
-          humanity to the earth.
+          RULApp empowers you to estimate the remaining useful life of your
+          assets using advanced machine learning. Make informed maintenance
+          decisions, reduce downtime, and optimize operations with accurate
+          predictions.
         </p>
         <button>
-          Explore More
+          Get Started
           <Image src="/images/arrow.png" alt="arrow" width={16} height={16} />
         </button>
       </HeroText>
@@ -57,7 +58,6 @@ const Hero: React.FC = () => {
 };
 
 export default Hero;
-
 
 const fadeIn = keyframes`
   from { opacity: 0; }
