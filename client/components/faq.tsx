@@ -1,5 +1,5 @@
 import HeroBreadcrumb from "@/components/Layout/breadcrumb";
-import Layout from "../components/Layout";
+import Layout from "./Layout";
 import styled from "styled-components";
 
 export default function FAQPage() {

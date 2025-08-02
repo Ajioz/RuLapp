@@ -42,10 +42,9 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
   };
 
   const helpLinks: HelpLink[] = [
-    { text: "Help Centre", href: "#" },
-    { text: "Contact Us", href: "#" },
-    { text: "Report Emergency", href: "#" },
-    { text: "FAQs", href: "#" },
+    { text: "Anomaly Service", href: "/anomaly" },
+    { text: "WellHead Service", href: "/wellhead" },
+    { text: "RUL", href: "/rul" },
   ];
 
   const goHome = useCallback(() => {
@@ -81,7 +80,7 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <span>Help</span>
+          <span>Service</span>
           <Dropdown $open={isDropdownOpen}>
             {helpLinks.map((link, idx) => (
               <a key={idx} href={link.href}>

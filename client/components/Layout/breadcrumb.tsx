@@ -6,7 +6,7 @@ import Link from "next/link";
 
 interface BreadcrumbItem {
   label: string;
-  icon?: React.ReactNode; // Optional icon for the breadcrumb
+  icon?: React.ReactNode; // Optional icon
   href?: string; // If undefined, it's the current page
 }
 
@@ -23,19 +23,21 @@ const HeroBreadcrumb: React.FC<HeroBreadcrumbProps> = ({
     <Container>
       <Title>{title}</Title>
       <Breadcrumbs aria-label="breadcrumb">
-        {breadcrumbs.map((crumb, index) => (
-          <React.Fragment key={index}>
-            {crumb.href ? (
-              <Link href={crumb.href}>{crumb.label}</Link>
-            ) : (
-              <>
-                <span>{crumb.icon}</span>
-                <span>{crumb.label}</span>
-              </>
-            )}
-            {index < breadcrumbs.length - 1 && <span>/</span>}
-          </React.Fragment>
-        ))}
+        {breadcrumbs.map((crumb, index) => {
+          const content = (
+            <BreadcrumbItemWrapper>
+              <span>{crumb.label}</span>
+              {crumb.icon && <span className="icon">{crumb.icon}</span>}
+            </BreadcrumbItemWrapper>
+          );
+
+          return (
+            <React.Fragment key={index}>
+              {crumb.href ? <Link href={crumb.href}>{content}</Link> : content}
+              {index < breadcrumbs.length - 1 && <Separator>/</Separator>}
+            </React.Fragment>
+          );
+        })}
       </Breadcrumbs>
     </Container>
   );
@@ -52,7 +54,7 @@ const Container = styled.div`
   min-height: 70vh;
   width: 100%;
   background: linear-gradient(rgba(8, 0, 58, 0.7), rgba(0, 58, 30, 0.462)),
-    url("/images/main/hero_ext.jpg") no-repeat center center/cover;
+    url("/images/breadcrumb.webp") no-repeat center center/cover;
   color: #ff8f00;
 `;
 
@@ -71,18 +73,35 @@ const Title = styled.h1`
 const Breadcrumbs = styled.nav`
   margin-top: 20px;
   display: flex;
+  align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
 
   a {
     color: #ffcc80;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
     &:hover {
-      text-decoration: underline;
+      color: #fff;
     }
   }
+`;
 
-  span {
-    color: #ffffffaa;
+const BreadcrumbItemWrapper = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  .icon {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
   }
+`;
+
+const Separator = styled.span`
+  color: #ffffffaa;
 `;

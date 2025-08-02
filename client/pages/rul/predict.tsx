@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import RULForm from "@/components/RULForm";
 import RULResult from "@/components/RULResult";
 import HeroBreadcrumb from "@/components/Layout/breadcrumb";
+import { IoChevronForwardSharp, IoHome } from "react-icons/io5";
 
 interface PredictionResult {
   rul_cycles: number;
@@ -21,7 +22,7 @@ export default function RULPage() {
       <HeroBreadcrumb
         title="Remaining Useful Life Prediction"
         breadcrumbs={[
-          { label: "Home", href: "/" },
+          { label: "👉 Home", href: "/", icon: <IoHome size={16} /> },
         ]}
       />
       <Container>
@@ -43,7 +44,7 @@ const Container = styled.div`
   padding: 1.5rem;
   background-color: #f9f9f9;
   border-radius: 8px;
-  margin-top: 30vh;
+  /* margin-top: 30vh; */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
