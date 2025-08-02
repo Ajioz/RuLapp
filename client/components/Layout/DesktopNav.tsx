@@ -5,7 +5,6 @@ import useNavbarMonitor from "./useNavbarMonitor";
 import Donate from "./buy";
 import { getLinks as menu } from "../../data";
 
-
 interface HelpLink {
   text: string;
   href: string;
@@ -17,17 +16,22 @@ interface DesktopNavProps {
   title?: string;
   loggedIn?: boolean;
   router: NextRouter;
-  target: { isHome: boolean; targetKey: string }; 
+  target: { isHome: boolean; targetKey: string };
 }
 /**
  * Desktop Navigation Component
  * @param {DesktopNavProps} props - Properties for the desktop navigation
  */
 
-export default function DesktopNav({ router, title, loggedIn, target }: DesktopNavProps) {
+export default function DesktopNav({
+  router,
+  title,
+  loggedIn,
+  target,
+}: DesktopNavProps) {
   const { navbarRef, isOutOfView } = useNavbarMonitor();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
   const delayTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {
@@ -76,19 +80,21 @@ export default function DesktopNav({ router, title, loggedIn, target }: DesktopN
             </NavItem>
           ))}
         </NavList>
-        <HelpWrapper
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <span>Service</span>
-          <Dropdown $open={isDropdownOpen}>
-            {helpLinks.map((link, idx) => (
-              <a key={idx} href={link.href}>
-                {link.text}
-              </a>
-            ))}
-          </Dropdown>
-        </HelpWrapper>
+        {isAdmin && (
+          <HelpWrapper
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <span>Service</span>
+            <Dropdown $open={isDropdownOpen}>
+              {helpLinks.map((link, idx) => (
+                <a key={idx} href={link.href}>
+                  {link.text}
+                </a>
+              ))}
+            </Dropdown>
+          </HelpWrapper>
+        )}
       </MainNavbar>
 
       <SecondaryNavbar $visible={isOutOfView}>
