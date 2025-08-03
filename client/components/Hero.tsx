@@ -1,69 +1,70 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import Image from "next/image";
 
-// Importing images and information for the hero section
 const images = [
   "/images/rollover_1.webp",
   "/images/rollover_3.webp",
   "/images/rollover_4.webp",
   "/images/rollover_5.webp",
+  "/images/rollover_6.webp",
 ];
 
-// Information to be displayed in the hero section
-// Each object contains a header and text for the hero section
 const info = [
-  { header: "Predict Remaining Useful Life with Confidence", text: "" },
-  { header: "Advanced Machine Learning for Accurate RUL", text: "" },
-  { header: "Optimize Maintenance and Reduce Downtime", text: "" },
-  { header: "Empower Your Asset Management Decisions", text: "" },
-  { header: "Seamless Integration for Smart Operations", text: "" },
+  {
+    header: "Advanced Machine Learning for Accurate RUL",
+    text: "By analyzing complex sensor data with sophisticated algorithms, our system delivers highly accurate RUL predictions that continuously improve as more operational data becomes available.",
+  },
+  {
+    header: "Optimize Maintenance and Reduce Downtime",
+    text: "Prevent costly, unplanned equipment failures and maximize uptime. Our insights help you schedule maintenance exactly when it's needed, reducing waste and avoiding premature part replacements.",
+  },
+  {
+    header: "Empower Your Asset Management Decisions",
+    text: "Gain actionable insights into the health of your critical assets, enabling informed decisions that extend equipment lifespan, improve safety, and boost operational efficiency.",
+  },
+  {
+    header: "Predict Remaining Useful Life with Confidence",
+    text: "Our platform leverages state-of-the-art machine learning models to provide precise RUL forecasts, helping you shift from reactive repairs to a proactive, data-driven maintenance strategy.",
+  },
+  {
+    header: "Maximize ROI Through Predictive Insights",
+    text: "Unlock the full potential of your assets by aligning predictive analytics with business goals, ensuring every maintenance decision contributes to profitability and long-term sustainability.",
+  },
 ];
+
+
 
 const Hero: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(-1);
-  const [track, setTrack] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setPrevIndex(currentIndex);
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 10000);
-
     return () => clearInterval(timer);
-  }, [currentIndex]);
-
-  const trackManager = useCallback((index: number) => {
-   setTrack((prev) => ( prev = index))
-  }, [track]);
+  }, []);
 
   return (
     <HeroContainer>
       <BackgroundContainer>
-        {images.map((img, index) => {
-          trackManager(index);
-          return (
-            <BackgroundLayer
-              key={img}
-              $image={img}
-              $active={index === currentIndex}
-              $fading={index === prevIndex}
-            />
-          );
-        })}
+        {images.map((img, index) => (
+          <BackgroundLayer
+            key={img}
+            $image={img}
+            $active={index === currentIndex}
+          />
+        ))}
       </BackgroundContainer>
-
       <GradientOverlay />
-
       <HeroText>
-        <h1>{info[track].header}</h1>
-        <p>{info[track].text}</p>
+        <h1>{info[currentIndex].header}</h1>
+        <p>{info[currentIndex].text}</p>
         <button>
           Get Started
-          <Image src="/images/arrow.png" alt="arrow" width={16} height={16} />
+          <Image src="/images/arrow.png" alt="Go to Get Started" width={16} height={16} />
         </button>
       </HeroText>
     </HeroContainer>
@@ -91,52 +92,33 @@ const HeroContainer = styled.div`
 
 const BackgroundContainer = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
 `;
 
 interface BackgroundLayerProps {
   $active: boolean;
-  $fading: boolean;
   $image: string;
 }
 
 const BackgroundLayer = styled.div<BackgroundLayerProps>`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-size: cover;
   background-position: left center;
   background-image: ${({ $image }) => `url(${$image})`};
-  opacity: 0;
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
   transition: opacity 1.5s ease-in-out;
-
   ${({ $active }) =>
     $active &&
     css`
-      opacity: 1;
-      z-index: 2;
       animation: ${fadeIn} 1.5s ease-in-out;
-    `}
-
-  ${({ $fading }) =>
-    $fading &&
-    css`
-      opacity: 0;
     `}
 `;
 
 const GradientOverlay = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(rgba(8, 0, 58, 0.7), rgba(0, 58, 30, 0.462));
+  inset: 0;
+  background: linear-gradient(rgba(8, 0, 58, 0.7), rgba(150, 93, 55, 0.462));
   z-index: 2;
 `;
 
@@ -147,22 +129,15 @@ const HeroText = styled.div`
   z-index: 3;
 
   h1 {
-    font-size: 60px;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
     font-weight: 600;
-
-    @media (max-width: 768px) {
-      font-size: 40px;
-    }
   }
 
   p {
     max-width: 700px;
     margin: 10px auto 20px;
     line-height: 1.4;
-
-    @media (max-width: 768px) {
-      font-size: 18px;
-    }
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
   }
 
   button {
@@ -180,11 +155,6 @@ const HeroText = styled.div`
 
     &:hover {
       background: #e07b00;
-    }
-
-    img {
-      width: 16px;
-      height: 16px;
     }
   }
 `;
