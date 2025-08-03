@@ -13,7 +13,7 @@ import HeroBreadcrumb from "./Layout/breadcrumb";
 
 
 const accountHead = {
-  headTitle: "Ajiozi | Account Management",
+  headTitle: "Account Management | Ajiozi",
   description:
     "Manage your account settings, view your profile, and access your dashboard. Stay updated with your activities and preferences on Ajiozi.",
   keywords:
