@@ -31,11 +31,11 @@ const Contact: React.FC = () => {
                 <FaChurch color="white" />
               </IconBox>
               <div>
-                <ContactDetailsTitle>Donate Here</ContactDetailsTitle>
+                <ContactDetailsTitle>Locate Agent</ContactDetailsTitle>
                 <ContactDetailsText>
-                  DIVINE ASSISTANCE RELIEF ORGANIZATION
+                  Ajiozi Dev Team
                 </ContactDetailsText>
-                <p>1027650209 UBA</p>
+                <p>#31 Airport Road, Delta, Nigeria</p>
               </div>
             </ContactItem>
 
@@ -45,7 +45,7 @@ const Contact: React.FC = () => {
               </IconBox>
               <div>
                 <ContactDetailsTitle>Call Us</ContactDetailsTitle>
-                <ContactDetailsText>+234-703-294-2993</ContactDetailsText>
+                <ContactDetailsText>+234-806-410-7055</ContactDetailsText>
               </div>
             </ContactItem>
 

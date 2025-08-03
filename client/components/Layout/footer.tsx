@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   IoCall,
-  IoLogoFacebook,
   IoLogoInstagram,
   IoLogoTwitter,
   IoLogoWhatsapp,
@@ -22,10 +21,11 @@ const Footer: React.FC = () => {
       {/* <NewsLetter /> */}
       <Content>
         <Left>
-          <Image src="/logo.png" alt="rul" width={100} height={40} />
+          <Image src="/logo.png" alt="rul" width={60} height={60} style={{borderRadius: "50%"}} />
           <p>
-            Strives to alleviate suffering, because it is compassionate, but
-            occasionally circumstances.
+            Designed to predict remaining useful life for informed planning,
+            while accounting for the occasional impact of unexpected operational
+            factors
           </p>
           <SocialIcons>
             <ul>
