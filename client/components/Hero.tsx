@@ -1,20 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import Image from "next/image";
 
+// Importing images and information for the hero section
+const images = [
+  "/images/rollover_1.webp",
+  "/images/rollover_3.webp",
+  "/images/rollover_4.webp",
+  "/images/rollover_5.webp",
+];
+
+// Information to be displayed in the hero section
+// Each object contains a header and text for the hero section
 const info = [
-  { img: "/images/rollover_1.webp", text: "Predict Remaining Useful Life with Confidence" },
-  { img: "/images/rollover_2.webp", text: "Advanced Machine Learning for Accurate RUL" },
-  { img: "/images/rollover_3.webp", text: "Optimize Maintenance and Reduce Downtime" },
-  { img: "/images/rollover_4.webp", text: "Empower Your Asset Management Decisions" },
-  { img: "/images/rollover_5.webp", text: "Seamless Integration for Smart Operations" },
+  { header: "Predict Remaining Useful Life with Confidence", text: "" },
+  { header: "Advanced Machine Learning for Accurate RUL", text: "" },
+  { header: "Optimize Maintenance and Reduce Downtime", text: "" },
+  { header: "Empower Your Asset Management Decisions", text: "" },
+  { header: "Seamless Integration for Smart Operations", text: "" },
 ];
 
 const Hero: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(-1);
+  const [track, setTrack] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,29 +36,31 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, [currentIndex]);
 
+  const trackManager = useCallback((index: number) => {
+   setTrack((prev) => ( prev = index))
+  }, [track]);
+
   return (
     <HeroContainer>
       <BackgroundContainer>
-        {info.map((item, index) => (
-          <BackgroundLayer
-            key={item.img}
-            $image={item.img}
-            $active={index === currentIndex}
-            $fading={index === prevIndex}
-          />
-        ))}
+        {images.map((img, index) => {
+          trackManager(index);
+          return (
+            <BackgroundLayer
+              key={img}
+              $image={img}
+              $active={index === currentIndex}
+              $fading={index === prevIndex}
+            />
+          );
+        })}
       </BackgroundContainer>
 
       <GradientOverlay />
 
       <HeroText>
-        <h1>{item.text}</h1>
-        <p>
-          RULApp empowers you to estimate the remaining useful life of your
-          assets using advanced machine learning. Make informed maintenance
-          decisions, reduce downtime, and optimize operations with accurate
-          predictions.
-        </p>
+        <h1>{info[track].header}</h1>
+        <p>{info[track].text}</p>
         <button>
           Get Started
           <Image src="/images/arrow.png" alt="arrow" width={16} height={16} />
