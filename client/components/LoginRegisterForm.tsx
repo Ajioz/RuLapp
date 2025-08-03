@@ -2,44 +2,48 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-import Layout from "./Layout/Layout_bkup";
-
+import Layout from "./Layout";
+import {
+  IoPersonOutline,
+  IoMailOutline,
+  IoLockClosedOutline,
+} from "react-icons/io5";
 
 export default function LoginRegisterForm() {
   const [isSignIn, setIsSignIn] = useState(true);
 
   return (
-    <Layout>
+    <Layout mainClassName="login-page">
       <Container>
         <Card isSignIn={isSignIn}>
           {/* Sign Up Form */}
           <div className="form">
             <h2>Sign Up</h2>
             <div className="inputBox">
+              <IoPersonOutline className="icon" />
               <input type="text" required />
-              <i className="fa-regular fa-user"></i>
               <span>username</span>
             </div>
             <div className="inputBox">
+              <IoMailOutline className="icon" />
               <input type="text" required />
-              <i className="fa-regular fa-envelope"></i>
               <span>email address</span>
             </div>
             <div className="inputBox">
+              <IoLockClosedOutline className="icon" />
               <input type="password" required />
-              <i className="fa-solid fa-lock"></i>
               <span>create password</span>
             </div>
             <div className="inputBox">
+              <IoLockClosedOutline className="icon" />
               <input type="password" required />
-              <i className="fa-solid fa-lock"></i>
               <span>confirm password</span>
             </div>
             <div className="inputBox">
               <input type="submit" value="Create Account" />
             </div>
             <p>
-              Already a member ? <a onClick={() => setIsSignIn(true)}>Log in</a>
+              Already a member? <a onClick={() => setIsSignIn(true)}>Log in</a>
             </p>
           </div>
 
@@ -47,20 +51,20 @@ export default function LoginRegisterForm() {
           <div className="signin">
             <h2>Sign In</h2>
             <div className="inputBox">
+              <IoPersonOutline className="icon" />
               <input type="text" required />
-              <i className="fa-regular fa-user"></i>
               <span>username</span>
             </div>
             <div className="inputBox">
+              <IoLockClosedOutline className="icon" />
               <input type="password" required />
-              <i className="fa-solid fa-lock"></i>
               <span>password</span>
             </div>
             <div className="inputBox">
               <input type="submit" value="Login" />
             </div>
             <p>
-              Not Registered ?{" "}
+              Not Registered?{" "}
               <a onClick={() => setIsSignIn(false)}>Create an account</a>
             </p>
           </div>
@@ -72,10 +76,12 @@ export default function LoginRegisterForm() {
 
 const Container = styled.div`
   display: flex;
-  width: 100%;
+  min-height: 40vh;
+  margin-top: 30vh;
   justify-content: center;
-  align-items: center; 
+  align-items: flex-start;
   padding: 2rem 0;
+  width: 100%;
 `;
 
 const Card = styled.div<{ isSignIn: boolean }>`
@@ -113,6 +119,17 @@ const Card = styled.div<{ isSignIn: boolean }>`
   .inputBox {
     position: relative;
     width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .inputBox .icon {
+    position: absolute;
+    left: 16px;
+    color: #00dfc4;
+    font-size: 1.2em;
+    border-right: 1px solid #00dfc4;
+    padding-right: 8px;
   }
 
   .inputBox input {
@@ -158,17 +175,6 @@ const Card = styled.div<{ isSignIn: boolean }>`
   .inputBox input:valid,
   .inputBox input:focus {
     border: 1px solid #00dfc4;
-  }
-
-  .inputBox i {
-    position: absolute;
-    top: 15px;
-    left: 16px;
-    width: 25px;
-    padding: 2px 0;
-    padding-right: 8px;
-    color: #00dfc4;
-    border-right: 1px solid #00dfc4;
   }
 
   .inputBox input[type="submit"] {
