@@ -7,13 +7,31 @@ import {
   IoPersonOutline,
   IoMailOutline,
   IoLockClosedOutline,
+  IoFingerPrintSharp,
 } from "react-icons/io5";
+import HeroBreadcrumb from "./Layout/breadcrumb";
+
+
+const accountHead = {
+  headTitle: "Ajiozi | Account Management",
+  description:
+    "Manage your account settings, view your profile, and access your dashboard. Stay updated with your activities and preferences on Ajiozi.",
+  keywords:
+    "Ajiozi, account management, user profile, dashboard, settings, preferences",
+};
 
 export default function LoginRegisterForm() {
   const [isSignIn, setIsSignIn] = useState(true);
 
   return (
-    <Layout mainClassName="login-page">
+    <Layout title="login-page" head={accountHead}>
+      <HeroBreadcrumb
+        title="Manage Account"
+        breadcrumbs={[
+          { label: "Home", icon: <IoFingerPrintSharp />, href: "/" },
+          { label: "Go Home", href: "/" },
+        ]}
+      />
       <Container>
         <Card isSignIn={isSignIn}>
           {/* Sign Up Form */}
@@ -77,7 +95,6 @@ export default function LoginRegisterForm() {
 const Container = styled.div`
   display: flex;
   min-height: 40vh;
-  margin-top: 30vh;
   justify-content: center;
   align-items: flex-start;
   padding: 2rem 0;

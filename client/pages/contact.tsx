@@ -5,15 +5,24 @@ import styled from "styled-components";
 import { FaPhoneAlt, FaEnvelope, FaChurch } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import HeroBreadcrumb from "@/components/Layout/breadcrumb";
-import { IoHome } from "react-icons/io5";
+import { IoFingerPrintSharp, IoHome } from "react-icons/io5";
+
+const contactHead = {
+  headTitle: "Contact Ajiozi | Get in Touch with Us",
+  description:
+    "Reach out to Daro for any inquiries, support, or partnership opportunities. We are here to assist you and provide information about our initiatives in sustainable development, education, healthcare, and environmental conservation.",
+  keywords:
+    "RUL, contact, inquiries, support, partnership, sustainable development, community insight, impact, machine-learning, education, machine health, environmental conservation, Ajiozi",
+};
 
 const Contact: React.FC = () => {
   return (
-    <Layout title="Contact Us">
+    <Layout title="Contact Us" head={contactHead}>
       <HeroBreadcrumb
-        title="Remaining Useful Life Prediction"
+        title="We Love to Hear From You"
         breadcrumbs={[
-          { label: "👉 Home", href: "/", icon: <IoHome size={16} /> },
+          { label: "Home", icon: <IoFingerPrintSharp />, href: "/" },
+          { label: "Go Home", href: "/" },
         ]}
       />
       <Container>
@@ -32,9 +41,7 @@ const Contact: React.FC = () => {
               </IconBox>
               <div>
                 <ContactDetailsTitle>Locate Agent</ContactDetailsTitle>
-                <ContactDetailsText>
-                  Ajiozi Dev Team
-                </ContactDetailsText>
+                <ContactDetailsText>Ajiozi Dev Team</ContactDetailsText>
                 <p>#31 Airport Road, Delta, Nigeria</p>
               </div>
             </ContactItem>
