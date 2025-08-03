@@ -21,13 +21,8 @@ export const getLinks = (isAdmin: boolean) => [
         icon: IoSchool,
     },
     {
-        href: "/login",
-        label: "login",
-        icon: IoSchool,
-    },
-    {
-        href: "/signup",
-        label: "Signup",
+        href: "/account",
+        label: "Account",
         icon: IoSchool,
     },
     ...(isAdmin

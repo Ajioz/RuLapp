@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import RULForm from "@/components/RULForm";
 import RULResult from "@/components/RULResult";
 import HeroBreadcrumb from "@/components/Layout/breadcrumb";
-import { IoChevronForwardSharp, IoHome } from "react-icons/io5";
+import { IoHome } from "react-icons/io5";
 
 interface PredictionResult {
   rul_cycles: number;

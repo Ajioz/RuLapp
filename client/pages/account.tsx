@@ -6,8 +6,6 @@ export default function LoginPage() {
     <div
       style={{
         background: "#223243",
-        // minHeight: "100vh",
-        // display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
