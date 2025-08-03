@@ -7,26 +7,22 @@ import {
   IoCall,
   IoLogoFacebook,
   IoLogoInstagram,
+  IoLogoTwitter,
   IoLogoWhatsapp,
   IoLogoYoutube,
   IoMailOpen,
 } from "react-icons/io5";
-import NewsLetter from "../Newsletter";
+// import NewsLetter from "../Newsletter";
 
 
 
 const Footer: React.FC = () => {
   return (
     <FooterWrapper>
-      <NewsLetter />
+      {/* <NewsLetter /> */}
       <Content>
         <Left>
-          <Image
-            src="/images/logo/logo-3.png"
-            alt="daro"
-            width={100}
-            height={40}
-          />
+          <Image src="/logo.png" alt="rul" width={100} height={40} />
           <p>
             Strives to alleviate suffering, because it is compassionate, but
             occasionally circumstances.
@@ -34,34 +30,25 @@ const Footer: React.FC = () => {
           <SocialIcons>
             <ul>
               <li>
-                <Link
-                  href="https://www.instagram.com/daro-nigeria"
-                  target="_blank"
-                >
+                <Link href="https://www.instagram.com/" target="_blank">
                   <IoLogoInstagram size={20} />
                 </Link>
               </li>
               <li>
                 <Link
-                  href="whatsapp://send?text=Hello, I am interested in learning more about your NGO. Could you please provide more details?&phone=+2347032942993"
+                  href="whatsapp://send?text=Hello, I am interested in learning more about your NGO. Could you please provide more details?&phone=+2348151654368"
                   target="_blank"
                 >
                   <IoLogoWhatsapp size={20} />
                 </Link>
               </li>
               <li>
-                <Link
-                  href="https://www.facebook.com/share/15zivZkprA/"
-                  target="_blank"
-                >
-                  <IoLogoFacebook size={20} />
+                <Link href="https://x.com/" target="_blank">
+                  <IoLogoTwitter size={20} />
                 </Link>
               </li>
               <li>
-                <Link
-                  href="https://youtube.com/@daronigeria?si=oOXRbxEXtVRxNxCM"
-                  target="_blank"
-                >
+                <Link href="https://youtube.com/@rul" target="_blank">
                   <IoLogoYoutube size={20} />
                 </Link>
               </li>
@@ -75,7 +62,7 @@ const Footer: React.FC = () => {
           </h3>
           <ul>
             <li>
-              <Link href="/about">About Daro</Link>
+              <Link href="/about">Ajiozi Ltd</Link>
             </li>
             <li>
               <Link href="/about">Meet the Team</Link>
@@ -96,16 +83,16 @@ const Footer: React.FC = () => {
           <h3>
             CONTACT <span>—</span>
           </h3>
-          <p>#31 Airport Road, Lagos, Nigeria</p>
+          <p>#31 Airport Road, Delta, Nigeria</p>
           <p>
             <IoMailOpen size={20} />{" "}
-            <Link href="mailto:info@daro.ng.org">info@daro.ng.org</Link>
+            <Link href="mailto:ajiozi@ajiozi.com">ajiozi@ajiozi.com</Link>
           </p>
           <p>
-            <IoCall size={20} /> +234 7032942993
+            <IoCall size={20} /> +234 8151654368
           </p>
           <p>
-            <IoCall size={20} /> +234 7064799193
+            <IoCall size={20} /> +234 8064107055
           </p>
         </Section>
 
@@ -115,37 +102,37 @@ const Footer: React.FC = () => {
           </h3>
           <ProjectGrid>
             <Image
-              src="/images/footer/footer1.jpg"
+              src="/images/rollover_1.webp"
               alt="Project 1"
               width={80}
               height={80}
             />
             <Image
-              src="/images/footer/footer2.jpg"
+              src="/images/rollover_2.webp"
               alt="Project 2"
               width={80}
               height={80}
             />
             <Image
-              src="/images/footer/footer3.webp"
+              src="/images/rollover_3.webp"
               alt="Project 3"
               width={80}
               height={80}
             />
             <Image
-              src="/images/footer/footer4.jpg"
+              src="/images/rollover_4.webp"
               alt="Project 4"
               width={80}
               height={80}
             />
             <Image
-              src="/images/footer/footer5.jpg"
+              src="/images/rollover_5.webp"
               alt="Project 5"
               width={80}
               height={80}
             />
             <Image
-              src="/images/footer/footer6.jpg"
+              src="/images/rollover_6.webp"
               alt="Project 6"
               width={80}
               height={80}
@@ -156,14 +143,8 @@ const Footer: React.FC = () => {
 
       <BottomBar>
         <p>
-          © 2024 - {new Date().toLocaleDateString("en-US", { year: "numeric" })}{" "}
-          | Daro Nigeria. All rights reserved.
-        </p>
-        <p>
-          powered by{" "}
-          <Link href="https://ajiozi.com" target="_blank">
-            Ajiozi
-          </Link>
+          © {new Date().toLocaleDateString("en-US", { year: "numeric" })} -
+          Ajiozi Ltd | All rights reserved.
         </p>
       </BottomBar>
     </FooterWrapper>
@@ -175,12 +156,11 @@ export default Footer;
 
 
 const FooterWrapper = styled.footer`
-  position: sticky;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #212121;
-  color: white;
+  background-color: #0a2342; /* Navy Blue */
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -189,7 +169,7 @@ const FooterWrapper = styled.footer`
 /* Inner content wrapper */
 const Content = styled.div`
   padding: 80px 60px;
-  min-height: 80vh;
+  min-height: 40vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -212,6 +192,7 @@ const Left = styled.div`
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 20px;
+    color: #e0e0e0; /* Light gray for better readability */
   }
 `;
 
@@ -234,19 +215,19 @@ const SocialIcons = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: white;
-    color: black;
+    background: #e0e0e0; /* Light gray background */
+    color: #0a2342; /* Navy icon color */
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 3px 5px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 
     &:hover {
       transform: scale(1.1);
     }
 
     &[href*="instagram.com"] {
-      color: #833ab4;
+      color: #e65100; /* Industrial Orange */
       &:hover {
-        background: #833ab4;
+        background: #e65100;
         color: white;
       }
     }
@@ -265,9 +246,9 @@ const SocialIcons = styled.div`
       }
     }
     &[href*="youtube.com"] {
-      color: red;
+      color: #c1121f; /* Engine Red */
       &:hover {
-        background: red;
+        background: #c1121f;
         color: white;
       }
     }
@@ -290,29 +271,19 @@ const Section = styled.div`
     align-items: center;
 
     span {
-      color: orange;
+      color: #ffb400; /* Safety Yellow accent */
       margin-left: 5px;
     }
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  ul li {
-    margin-bottom: 8px;
-  }
-
   ul li a {
-    color: white;
+    color: #e0e0e0;
     font-size: 14px;
     text-decoration: none;
-    transition: color 0.3s ease;
 
     &:hover {
       text-decoration: underline;
-      color: #f0f0f0;
+      color: #ffffff;
     }
   }
 
@@ -322,6 +293,7 @@ const Section = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
+    color: #e0e0e0;
   }
 `;
 
@@ -329,17 +301,8 @@ const Projects = styled.div`
   flex: 1;
   max-width: 300px;
 
-  h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-
-    span {
-      color: orange;
-      margin-left: 5px;
-    }
+  h3 span {
+    color: #ffb400;
   }
 `;
 
@@ -352,7 +315,7 @@ const ProjectGrid = styled.div`
     width: 100%;
     height: 60px;
     object-fit: cover;
-    border: 1px solid white;
+    border: 1px solid #e0e0e0;
     border-radius: 5px;
     transition: transform 0.3s ease;
 
@@ -367,7 +330,7 @@ const ProjectGrid = styled.div`
 `;
 
 const BottomBar = styled.div`
-  background-color: #000;
+  background-color: #1c1c1c; /* Gunmetal Black */
   padding: 15px 10px;
   display: flex;
   flex-direction: column;
@@ -376,12 +339,16 @@ const BottomBar = styled.div`
 
   p {
     margin: 5px 0;
-    color: #fff;
+    color: #e0e0e0;
     font-size: 14px;
 
     a {
-      color: skyblue;
+      color: #ffb400;
       text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 `;
