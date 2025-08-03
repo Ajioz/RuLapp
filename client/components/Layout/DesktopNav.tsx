@@ -132,7 +132,7 @@ const NavbarContainer = styled.div`
   position: relative;
   top: 100px;
   width: 100%;
-  background: #212121;
+  background: #0a2342;
   box-shadow: 2px 1px 2px 1px rgba(0, 0, 0, 0.3);
   font-size: 14px;
 

@@ -1,19 +1,18 @@
-import Layout from "../components/Layout";
-import styled from "styled-components";
+import LoginForm from "@/components/LoginRegisterForm";
+import React from "react";
 
 export default function LoginPage() {
   return (
-    <Layout title="Login">
-      <Container>
-        <h1>🔐 Login</h1>
-        <p>Login functionality coming soon...</p>
-      </Container>
-    </Layout>
+    <div
+      style={{
+        background: "#223243",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <LoginForm />
+    </div>
   );
 }
-
-const Container = styled.div`
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
-`;
