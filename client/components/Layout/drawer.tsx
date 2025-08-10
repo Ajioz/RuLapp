@@ -5,11 +5,11 @@ import Image from "next/image";
 import styled from "styled-components";
 
 interface DrawerProps {
-  isOpen: boolean;
+  $isOpen: boolean;
   handleToggleMenu: () => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ isOpen, handleToggleMenu }) => {
+const Drawer: React.FC<DrawerProps> = ({ $isOpen, handleToggleMenu }) => {
   const { push } = useRouter();
 
   const openChoice = (link: string) => {
@@ -35,7 +35,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, handleToggleMenu }) => {
     ));
 
   return (
-    <MenuContainer isOpen={isOpen}>
+    <MenuContainer $isOpen={$isOpen}>
       <DrawerHeader>
         <Image
           src="/logo.png"
@@ -54,13 +54,13 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, handleToggleMenu }) => {
 export default Drawer;
 
 interface MenuContainerProps {
-  isOpen: boolean;
+  $isOpen: boolean;
 }
 
 const MenuContainer = styled.div<MenuContainerProps>`
   position: fixed;
   top: 0;
-  right: ${({ isOpen }) => (isOpen ? "0" : "-100%")};
+  right: ${({ $isOpen }) => ($isOpen ? "0" : "-100%")};
   width: 70%;
   height: 100vh;
   background: #fff;

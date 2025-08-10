@@ -6,8 +6,8 @@ import styled, { keyframes } from "styled-components";
 interface RollOverProps {
   messages?: string[];
   speed?: number; // in seconds
-  backgroundColor?: string;
-  textColor?: string;
+  $backgroundColor?: string;
+  $textColor?: string;
 }
 
 const scroll = keyframes`
@@ -19,9 +19,9 @@ const scroll = keyframes`
   }
 `;
 
-const MarqueeSection = styled.div<{ backgroundColor: string }>`
+const MarqueeSection = styled.div<{ $backgroundColor: string }>`
   position: relative;
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
   padding: 15px 0;
   height: 50px;
   display: flex;
@@ -50,11 +50,11 @@ const MarqueeGroup = styled.div<{ speed: number }>`
   }
 `;
 
-const Text = styled.div<{ textColor: string }>`
+const Text = styled.div<{ $textColor: string }>`
   font-size: 14px;
   line-height: 36px;
   font-weight: bolder;
-  color: ${({ textColor }) => textColor};
+  color: ${({ $textColor }) => $textColor};
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   text-transform: uppercase;
   margin: 0;
@@ -75,22 +75,22 @@ const RollOver: React.FC<RollOverProps> = ({
         "*Connected Industrial Assets",
     ],
     speed = 30,
-    backgroundColor = "#212121",
-    textColor = "#fff",
+    $backgroundColor = "#212121",
+    $textColor = "#fff",
 }) => {
     return (
-        <MarqueeSection backgroundColor={backgroundColor}>
+        <MarqueeSection $backgroundColor={$backgroundColor}>
             <Marquee>
                 <MarqueeGroup speed={speed}>
                     {messages.map((msg, i) => (
-                        <Text key={i} textColor={textColor}>
+                        <Text key={i} $textColor={$textColor}>
                             {msg}
                         </Text>
                     ))}
                 </MarqueeGroup>
                 <MarqueeGroup speed={speed} aria-hidden="true">
                     {messages.map((msg, i) => (
-                        <Text key={`clone-${i}`} textColor={textColor}>
+                        <Text key={`clone-${i}`} $textColor={$textColor}>
                             {msg}
                         </Text>
                     ))}

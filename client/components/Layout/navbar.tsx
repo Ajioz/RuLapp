@@ -71,11 +71,11 @@ const MobileNav: React.FC<MobileNavProps> = ({ isAdmin }) => {
           <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
         </div>
         {!isOutOfView && (
-          <Drawer isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
+          <Drawer $isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
         )}
       </FirstNavBar>
 
-      <SecondaryNavbar visible={isOutOfView}>
+      <SecondaryNavbar $visible={isOutOfView}>
         <NavLinks>
           {links(isAdmin).map((link) => (
             <Link key={link.href} href={link.href} passHref>
@@ -87,7 +87,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isAdmin }) => {
         </NavLinks>
         <IoMenu size={30} onClick={handleToggleMenu} color="#fff" />
         {isOutOfView && (
-          <Drawer isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
+          <Drawer $isOpen={isOpen} handleToggleMenu={handleToggleMenu} />
         )}
       </SecondaryNavbar>
     </MobileWrapper>
@@ -125,7 +125,7 @@ const FirstNavBar = styled.div`
   z-index: 10;
 `;
 
-const SecondaryNavbar = styled.div<{ visible: boolean }>`
+const SecondaryNavbar = styled.div<{ $visible: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,9 +138,9 @@ const SecondaryNavbar = styled.div<{ visible: boolean }>`
   height: 80px;
   margin: -5px auto;
   z-index: 20;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: ${({ visible }) =>
-    visible ? "translateY(0)" : "translateY(-100%)"};
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: ${({ $visible }) =>
+    $visible ? "translateY(0)" : "translateY(-100%)"};
   transition: opacity 0.3s ease, transform 0.3s ease;
 
   @media (min-width: 768px) {
