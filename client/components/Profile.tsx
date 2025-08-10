@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { about } from "@/data";
 import { CustomBtn } from "@/components/Layout/buy";
 import {
@@ -133,7 +133,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ handleModal }) => {
 
 const Profile: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const handleModal = () => setIsOpen(!isOpen);
+  
+  const handleModal = useCallback(() => {
+    setIsOpen(prev => !prev);
+  },[]);
 
   return (
     <>
