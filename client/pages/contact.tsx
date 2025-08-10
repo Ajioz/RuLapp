@@ -62,7 +62,7 @@ const Contact: React.FC = () => {
               </IconBox>
               <div>
                 <ContactDetailsTitle>Email Us</ContactDetailsTitle>
-                <ContactDetailsText>support@daronigeria.org</ContactDetailsText>
+                <ContactDetailsText>support@ajiozi.com</ContactDetailsText>
               </div>
             </ContactItem>
           </Left>
@@ -184,6 +184,7 @@ const ContactDetailsTitle = styled.h4`
 const ContactDetailsText = styled.p`
   margin: 0.2rem 0 0;
   color: #ccc;
+  font-size: 0.8rem;
 `;
 
 const Form = styled.form`
