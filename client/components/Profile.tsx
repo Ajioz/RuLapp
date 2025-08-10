@@ -76,53 +76,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ handleModal }) => {
   return (
     <Hero>
       <Community>About Us</Community>
-      <Heading>
-        To manifest God's love and compassion in the life of all
-      </Heading>
+      <Heading> Powering Industry 4.0 Through Intelligent Automation</Heading>
 
       <ButtonGroup>
         <InfoButton>
           <InfoIcon aria-hidden />
-          Support Us
+          Our Solutions
         </InfoButton>
         <InfoButton>
           <InfoIcon aria-hidden />
-          Join Our Mission
+          Partner With Us
         </InfoButton>
       </ButtonGroup>
 
       <Description>
-        The Divine Assistance Relief Organisation (DARO) was established in 2024
-        as a humanitarian organization to provide relief and developmental
-        assistance to individuals and communities in Nigeria. DARO's mission is
-        to improve the quality of life of people in need by assessing needs,
-        creating awareness, providing resources, and working with communities,
-        organisations, local churches and government. DARO provides assistance
-        regardless of ethnicity, political affiliation, gender, or religious
-        association. DARO's work includes community development; food security
-        and nutrition; protection services; water, sanitation and hygiene
-        (WASH); Health Services, Education; Shelter and Reconstruction; Economic
-        Recovery and Livelihood; Advocacy and Policy Work, Climate Change
-        Adaptation etc.
+        Ajiozi is a leading systems integration and industrial automation
+        company driving the future of smart industry. We specialize in
+        end-to-end digital transformation for critical infrastructure,
+        delivering robust solutions in wellhead automation, remote monitoring,
+        predictive maintenance, and process optimization using IoT, machine
+        learning, and real-time data analytics.
+      </Description>
+
+      <Description>
+        From oilfield operations to manufacturing plants, we design and deploy
+        intelligent systems that enhance safety, efficiency, and reliability.
+        Our integrated platforms enable clients to monitor assets remotely,
+        automate complex processes, and make data-driven decisions with
+        precision and confidence.
       </Description>
 
       <h4>CORE VALUES (ISEC)</h4>
       <Description>
-        1. Integrity: maintaining honesty, transparency and moral uprightness in
-        all decisions and actions;
+        1. Integrity: We build trusted partnerships through transparent
+        engineering, secure systems, and ethical innovation.
       </Description>
       <Description>
-        2. Service: humble dedication to serving others, following the example
-        of Jesus Christ;
+        2. Innovation: We push the boundaries of industrial technology,
+        leveraging AI, edge computing, and cloud-connected systems to solve
+        real-world challenges.
       </Description>
       <Description>
-        3. Empathy: understand and share feelings, thoughts, or experiences of
-        other people, and take action or offer support to alleviate their pains
-        or struggle appropriately;
+        3. Excellence: We deliver mission-critical solutions with precision,
+        reliability, and zero compromise on quality or safety.
       </Description>
       <Description>
-        4. Collaboration: Partnering with other organisations, government,
-        ministries, local churches and communities to maximize impact.
+        4. Collaboration: We work closely with clients, engineers, and field
+        operators to co-develop systems that fit operational realities and scale
+        with future needs.
       </Description>
 
       <CustomBtn showHeart={false} value="Learn More" onClick={handleModal} />
@@ -131,7 +132,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ handleModal }) => {
 };
 
 const Profile: React.FC = () => {
-  
   const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => setIsOpen(!isOpen);
 
@@ -142,7 +142,7 @@ const Profile: React.FC = () => {
           <HeroSection handleModal={handleModal} />
         </Side>
         <Side>
-          <CampaignFundsCard amount="2,322" label="Campaign Fund" />
+          <CampaignFundsCard amount="1,022 Failure" label="Predicted" />
         </Side>
       </Container>
       {isOpen && <Modal setOpen={setIsOpen} />}
