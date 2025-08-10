@@ -1,13 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
-import styled from "styled-components";
-import { FaCheckCircle } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
 import { about } from "@/data";
-import Buy from "@/components/Layout/buy"; 
-
-
+import { CustomBtn } from "@/components/Layout/buy";
+import {
+  Amount,
+  ButtonGroup,
+  Card,
+  CheckIcon,
+  CloseIcon,
+  Community,
+  Container,
+  Description,
+  FundBubble,
+  Heading,
+  Hero,
+  InfoButton,
+  InfoIcon,
+  Label,
+  Side,
+  ModalContainer,
+  ModalContent,
+} from "./styles/ProfileStyles";
 
 // ==================
 // Components
@@ -24,7 +38,10 @@ export const CampaignFundsCard: React.FC<CampaignFundsCardProps> = ({
   <Card>
     <FundBubble>
       <Amount>{amount}</Amount>
-      <Label>{label}</Label>
+      <Label>
+        <CheckIcon aria-hidden />
+        <span>{label}</span>
+      </Label>
     </FundBubble>
   </Card>
 );
@@ -34,9 +51,13 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ setOpen }) => (
-  <ModalContainer>
+  <ModalContainer role="dialog" aria-modal>
     <ModalContent>
-      <CloseIcon size={25} color="#000" onClick={() => setOpen(false)} />
+      <CloseIcon
+        aria-label="Close modal"
+        size={22}
+        onClick={() => setOpen(false)}
+      />
       {about.map(({ id, title, description }) => (
         <div key={id}>
           <h1>{title}</h1>
@@ -47,16 +68,11 @@ const Modal: React.FC<ModalProps> = ({ setOpen }) => (
   </ModalContainer>
 );
 
+interface HeroSectionProps {
+  handleModal: () => void;
+}
 
-
-export const HeroSection: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleModal = () => {
-    setIsOpen(!isOpen);
-    console.log("Modal Opened!");
-  };
-
+export const HeroSection: React.FC<HeroSectionProps> = ({ handleModal }) => {
   return (
     <Hero>
       <Community>About Us</Community>
@@ -66,10 +82,12 @@ export const HeroSection: React.FC = () => {
 
       <ButtonGroup>
         <InfoButton>
-          <Icon /> Support Us
+          <InfoIcon aria-hidden />
+          Support Us
         </InfoButton>
         <InfoButton>
-          <Icon /> Join Our Mission
+          <InfoIcon aria-hidden />
+          Join Our Mission
         </InfoButton>
       </ButtonGroup>
 
@@ -107,141 +125,29 @@ export const HeroSection: React.FC = () => {
         ministries, local churches and communities to maximize impact.
       </Description>
 
-      <Buy showHeart={false} value="Learn More" onClick={handleModal} />
-
-      {isOpen && <Modal setOpen={setIsOpen} />}
+      <CustomBtn showHeart={false} value="Learn More" onClick={handleModal} />
     </Hero>
   );
 };
 
 const Profile: React.FC = () => {
+  
+  const [isOpen, setIsOpen] = useState(false);
+  const handleModal = () => setIsOpen(!isOpen);
+
   return (
-    <Container>
-      <Left>
-        <HeroSection />
-      </Left>
-      <Right>
-        <CampaignFundsCard amount="2,322" label="Campaign Fund" />
-      </Right>
-    </Container>
+    <>
+      <Container>
+        <Side>
+          <HeroSection handleModal={handleModal} />
+        </Side>
+        <Side>
+          <CampaignFundsCard amount="2,322" label="Campaign Fund" />
+        </Side>
+      </Container>
+      {isOpen && <Modal setOpen={setIsOpen} />}
+    </>
   );
 };
 
 export default Profile;
-
-
-// ==================
-// Styled Components
-// ==================
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  width: 100%;
-`;
-
-const Left = styled.div`
-  flex: 2;
-`;
-
-const Right = styled.div`
-  flex: 1;
-`;
-
-const Card = styled.div`
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-`;
-
-const FundBubble = styled.div`
-  display: inline-block;
-  padding: 1rem 2rem;
-  background: #e6f4ea;
-  border-radius: 50px;
-`;
-
-const Amount = styled.span`
-  font-size: 1.8rem;
-  font-weight: bold;
-  display: block;
-`;
-
-const Label = styled.span`
-  font-size: 1rem;
-  color: #555;
-`;
-
-const Hero = styled.section`
-  padding: 2rem;
-  background-color: #f8f8f8;
-`;
-
-const Community = styled.p`
-  font-weight: bold;
-  color: #e63946;
-`;
-
-const Heading = styled.h1`
-  font-size: 2rem;
-  margin: 1rem 0;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-`;
-
-const InfoButton = styled.button`
-  background: #0077b6;
-  color: white;
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    background: #023e8a;
-  }
-`;
-
-const Icon = styled(FaCheckCircle)`
-  font-size: 1.2rem;
-`;
-
-const Description = styled.p`
-  line-height: 1.6;
-  margin: 1rem 0;
-`;
-
-const ModalContainer = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContent = styled.section`
-  background: white;
-  padding: 2rem;
-  max-width: 600px;
-  border-radius: 8px;
-  position: relative;
-  overflow-y: auto;
-  max-height: 80vh;
-`;
-
-const CloseIcon = styled(IoClose)`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  cursor: pointer;
-`;

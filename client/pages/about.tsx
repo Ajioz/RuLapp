@@ -21,16 +21,7 @@ export default function AboutPage() {
           { label: "Home", icon: <IoFingerPrintSharp />, href: "/" },
         ]}
       />
-      <Container>
-        {/* <Profile /> */}
-        <Profile />
-      </Container>
+      <Profile />
     </Layout>
   );
 }
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-`;
