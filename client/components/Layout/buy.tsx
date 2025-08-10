@@ -9,7 +9,7 @@ interface CustomBtnProps {
   onClick?: () => void;
 }
 
-const Donate: React.FC = () => {
+const Buy: React.FC = () => {
   const { push } = useRouter();
   return (
     <DonateContainer>
@@ -24,7 +24,7 @@ const Donate: React.FC = () => {
   );
 };
 
-export default Donate;
+export default Buy;
 
 export const CustomBtn: React.FC<CustomBtnProps> = ({
   value,

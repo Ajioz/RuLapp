@@ -2,7 +2,7 @@ import HeroBreadcrumb from "@/components/Layout/breadcrumb";
 import Layout from "@/components/Layout";
 import { IoFingerPrintSharp } from "react-icons/io5";
 import styled from "styled-components";
-import Profile from "@/components/Profile";
+import AboutComponent from "@/components/Profile";
 
 const aboutHead = {
   headTitle: "About Us | Learn More About Our Platform",
@@ -22,7 +22,8 @@ export default function AboutPage() {
         ]}
       />
       <Container>
-        <Profile />
+        {/* <Profile /> */}
+        <AboutComponent />
       </Container>
     </Layout>
   );

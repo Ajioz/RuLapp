@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useRouter, NextRouter } from "next/router";
+import { useRouter } from "next/router";
 import DesktopNav from "./DesktopNav";
 import { IoMenu } from "react-icons/io5";
 import useNavbarMonitor from "./useNavbarMonitor";
