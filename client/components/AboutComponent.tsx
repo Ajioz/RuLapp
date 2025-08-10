@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { about } from "@/data";
-import { CustomBtn } from "./Layout/buy"; 
+import Buy from "@/components/Layout/buy"; 
 
 
 
@@ -48,11 +48,6 @@ const Modal: React.FC<ModalProps> = ({ setOpen }) => (
 );
 
 
-interface buyProps {  
-  showHeart?: boolean;
-  value: string;  
-  onClick: () => void;
-}
 
 export const HeroSection: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +107,7 @@ export const HeroSection: React.FC = () => {
         ministries, local churches and communities to maximize impact.
       </Description>
 
-      <CustomBtn showHeart={false} value="Learn More" onClick={handleModal} />
+      <Buy showHeart={false} value="Learn More" onClick={handleModal} />
 
       {isOpen && <Modal setOpen={setIsOpen} />}
     </Hero>

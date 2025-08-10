@@ -3,22 +3,29 @@ import { useRouter } from "next/router";
 import { IoBasket, IoBagSharp, IoSearch } from "react-icons/io5";
 import styled from "styled-components";
 
-interface CustomBtnProps {
+interface BuyProps {
   value: string;
   showHeart?: boolean;
   onClick?: () => void;
 }
 
-const Buy: React.FC = () => {
+const Buy: React.FC<BuyProps> = ({
+  value= "Buy Plan",
+  showHeart = false,
+  onClick = () => {},
+}) => {
   const { push } = useRouter();
+
+    const router = useRouter();
+
   return (
     <DonateContainer>
       <IoSearch size={30} />
       <IoBasket size={30} />
       <CustomBtn
-        showHeart={true}
-        value="Buy Plan"
-        onClick={() => push("/contact")}
+        showHeart={showHeart}
+        value={value}
+       onClick={onClick ?? (() => router.push("/contact"))}
       />
     </DonateContainer>
   );
@@ -26,14 +33,16 @@ const Buy: React.FC = () => {
 
 export default Buy;
 
-export const CustomBtn: React.FC<CustomBtnProps> = ({
-  value,
+export const CustomBtn: React.FC<BuyProps> = ({
+  value = "Buy Plan",
   showHeart = false,
   onClick,
 }) => {
   return (
     <StyledDonateBtn onClick={onClick}>
-      {showHeart && <IoBagSharp size={20} style={{ color: "#fff", zIndex: 1 }} />}
+      {showHeart && (
+        <IoBagSharp size={20} style={{ color: "#fff", zIndex: 1 }} />
+      )}
       <span>{value}</span>
     </StyledDonateBtn>
   );
